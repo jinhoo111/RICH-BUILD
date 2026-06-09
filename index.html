@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>RichBuild | 리치빌드</title>
+
+  <!-- Google Fonts: Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Supabase JS SDK (CDN) — 초기화는 supabase-client.js에서 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- 페르소나 텍스트 상수 -->
+  <script src="persona-text.js"></script>
+
+  <style>
+    /* ============================================================
+       :root — 디자인 시스템 토큰 (designsystem_richbuild.md 기준)
+       ============================================================ */
+    :root {
+      /* --- Brand: Primary (Teal) --- */
+      --color-primary-50:  #E1F5EE;
+      --color-primary-100: #9FE1CB;
+      --color-primary-200: #5DCAA5;
+      --color-primary-500: #1D9E75;
+      --color-primary-700: #0F6E56;
+      --color-primary-800: #085041;
+      --color-primary-900: #04342C;
+
+      /* --- Brand: Accent (Gold) --- */
+      --color-accent-50:  #FAEEDA;
+      --color-accent-100: #FAC775;
+      --color-accent-400: #EF9F27;
+      --color-accent-600: #BA7517;
+      --color-accent-800: #633806;
+      --color-accent-900: #412402;
+
+      /* --- Semantic --- */
+      --color-profit:  #E53935;
+      --color-loss:    #1565C0;
+      --color-success: #1D9E75;
+      --color-warning: #EF9F27;
+      --color-error:   #E53935;
+      --color-info:    #1565C0;
+
+      /* --- Gray Scale --- */
+      --color-gray-50:  #F8F8F6;
+      --color-gray-100: #F0F0ED;
+      --color-gray-200: #E2E2DE;
+      --color-gray-300: #C8C8C3;
+      --color-gray-400: #A8A8A2;
+      --color-gray-500: #888882;
+      --color-gray-600: #5A5A56;
+      --color-gray-700: #3A3A37;
+      --color-gray-900: #1E1E1C;
+
+      /* --- Surface (Light Mode) --- */
+      --color-bg-primary:    #F8F8F6;
+      --color-bg-secondary:  #F0F0ED;
+      --color-bg-elevated:   #FFFFFF;
+
+      --color-text-primary:   #1E1E1C;
+      --color-text-secondary: #5A5A56;
+      --color-text-tertiary:  #A8A8A2;
+
+      --color-border-default: #E2E2DE;
+      --color-border-strong:  #C8C8C3;
+
+      /* --- Typography: Font Family --- */
+      --font-display: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      --font-body:    'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      --font-number:  'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+
+      /* --- Typography: Font Size --- */
+      --font-size-display-xl: 36px;
+      --font-size-display-lg: 30px;
+      --font-size-h1:         24px;
+      --font-size-h2:         20px;
+      --font-size-h3:         18px;
+      --font-size-body:       16px;
+      --font-size-body-sm:    14px;
+      --font-size-caption:    12px;
+
+      /* --- Typography: Font Weight --- */
+      --font-weight-regular: 400;
+      --font-weight-medium:  500;
+      --font-weight-bold:    700;
+
+      /* --- Typography: Line Height --- */
+      --line-height-tight:   1.2;
+      --line-height-normal:  1.5;
+      --line-height-relaxed: 1.7;
+
+      /* --- Spacing (8pt grid) --- */
+      --space-1:  4px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-5:  20px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --space-10: 40px;
+      --space-12: 48px;
+      --space-16: 64px;
+
+      /* --- Border Radius --- */
+      --radius-xs:   4px;
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-xl:   24px;
+      --radius-full: 9999px;
+
+      /* --- Shadow / Elevation --- */
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+    }
+
+    /* ============================================================
+       Reset & Base
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-regular);
+      color: var(--color-text-primary);
+      background-color: var(--color-bg-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================================
+       App Wrapper — 모바일 중앙 정렬
+       ============================================================ */
+    #app {
+      max-width: 480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      position: relative;
+      background-color: var(--color-bg-primary);
+    }
+
+    /* ============================================================
+       App Bar (상단)
+       ============================================================ */
+    #app-bar {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 56px;
+      background-color: var(--color-bg-elevated);
+      border-bottom: 1px solid var(--color-border-default);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--space-4);
+      z-index: 100;
+    }
+
+    #app-bar .app-bar-logo {
+      font-size: var(--font-size-h3);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-primary-500);
+      letter-spacing: -0.3px;
+    }
+
+    /* ============================================================
+       Tab Content Area (본문)
+       ============================================================ */
+    #tab-content {
+      padding-top: 56px;
+      padding-bottom: 56px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tab-page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .tab-page.active {
+      display: flex;
+    }
+
+    .tab-page-label {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+    }
+
+    /* ============================================================
+       Bottom Navigation (하단 탭바)
+       ============================================================ */
+    #bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 56px;
+      background-color: var(--color-bg-elevated);
+      border-top: 1px solid var(--color-border-default);
+      display: flex;
+      align-items: stretch;
+      z-index: 100;
+    }
+
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 0;
+      font-family: var(--font-body);
+      -webkit-tap-highlight-color: transparent;
+      transition: color 150ms ease;
+    }
+
+    .tab-item .tab-label {
+      font-size: 10px;
+      font-weight: var(--font-weight-regular);
+      color: var(--color-gray-400);
+      line-height: 1;
+      transition: color 150ms ease;
+    }
+
+    .tab-item.active .tab-label {
+      color: var(--color-primary-500);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* 커뮤니티 탭 — 비활성 고정 */
+    .tab-item.locked {
+      cursor: default;
+    }
+
+    .tab-item.locked .tab-label {
+      color: var(--color-gray-300);
+    }
+
+    .tab-item.locked .tab-lock-icon {
+      font-size: 10px;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- 상단 앱바 -->
+    <header id="app-bar">
+      <span class="app-bar-logo">RichBuild</span>
+    </header>
+
+    <!-- 탭 콘텐츠 영역 -->
+    <main id="tab-content">
+      <div class="tab-page active" data-page="home">
+        <span class="tab-page-label">홈</span>
+      </div>
+      <div class="tab-page" data-page="news">
+        <span class="tab-page-label">뉴스</span>
+      </div>
+      <div class="tab-page" data-page="community">
+        <span class="tab-page-label">커뮤니티</span>
+      </div>
+      <div class="tab-page" data-page="journal">
+        <span class="tab-page-label">일지</span>
+      </div>
+      <div class="tab-page" data-page="my">
+        <span class="tab-page-label">마이</span>
+      </div>
+    </main>
+
+    <!-- 하단 탭바 -->
+    <nav id="bottom-nav">
+      <button class="tab-item active" data-tab="home">
+        <span class="tab-label">홈</span>
+      </button>
+      <button class="tab-item" data-tab="news">
+        <span class="tab-label">뉴스</span>
+      </button>
+      <button class="tab-item locked" data-tab="community">
+        <span class="tab-lock-icon">🔒</span>
+        <span class="tab-label">커뮤니티</span>
+      </button>
+      <button class="tab-item" data-tab="journal">
+        <span class="tab-label">일지</span>
+      </button>
+      <button class="tab-item" data-tab="my">
+        <span class="tab-label">마이</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <script>
+    var currentTab = 'home';
+
+    function switchTab(tabName) {
+      if (tabName === 'community') {
+        alert('커뮤니티는 v2.0에서 오픈 예정이에요 🔒');
+        return;
+      }
+
+      currentTab = tabName;
+
+      // 탭 버튼 활성 상태 전환
+      document.querySelectorAll('.tab-item').forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      var activeBtn = document.querySelector('.tab-item[data-tab="' + tabName + '"]');
+      if (activeBtn) activeBtn.classList.add('active');
+
+      // 콘텐츠 영역 전환
+      document.querySelectorAll('.tab-page').forEach(function(page) {
+        page.classList.remove('active');
+      });
+      var activePage = document.querySelector('.tab-page[data-page="' + tabName + '"]');
+      if (activePage) activePage.classList.add('active');
+    }
+
+    // 탭 클릭 이벤트 등록
+    document.querySelectorAll('.tab-item').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        switchTab(btn.dataset.tab);
+      });
+    });
+  </script>
+  <script src="supabase-client.js"></script>
+
+</body>
+</html>
