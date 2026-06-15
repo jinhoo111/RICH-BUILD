@@ -269,19 +269,556 @@
       font-size: 10px;
       line-height: 1;
     }
+
+    /* ============================================================
+       PHASE 2-2: 인증 화면 공통
+       ============================================================ */
+    .auth-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      background-color: var(--color-bg-primary);
+      z-index: 200;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .auth-screen.active {
+      display: flex;
+    }
+
+    /* ============================================================
+       스플래시 화면
+       ============================================================ */
+    #screen-splash {
+      background-color: var(--color-primary-800);
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+    }
+
+    .splash-logo {
+      font-size: 32px;
+      font-weight: var(--font-weight-bold);
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    .splash-slogan {
+      font-size: var(--font-size-body-sm);
+      color: rgba(255, 255, 255, 0.65);
+      letter-spacing: 0.5px;
+    }
+
+    .splash-spinner {
+      margin-top: var(--space-8);
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-top-color: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ============================================================
+       온보딩 슬라이드
+       ============================================================ */
+    #screen-onboarding {
+      background-color: var(--color-bg-elevated);
+    }
+
+    .onboarding-top {
+      display: flex;
+      justify-content: flex-end;
+      padding: var(--space-4) var(--space-6);
+      padding-top: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+    }
+
+    .btn-skip {
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      padding: var(--space-2) 0;
+    }
+
+    .onboarding-slides-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--space-8);
+    }
+
+    .onboarding-slide {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: var(--space-4);
+      width: 100%;
+    }
+
+    .onboarding-slide.active {
+      display: flex;
+    }
+
+    .slide-icon {
+      font-size: 64px;
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+
+    .slide-title {
+      font-size: var(--font-size-h2);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      line-height: var(--line-height-tight);
+    }
+
+    .slide-desc {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .onboarding-bottom {
+      padding: var(--space-6) var(--space-6);
+      padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .slide-dots {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-border-strong);
+      transition: all 200ms ease;
+    }
+
+    .dot.active {
+      width: 18px;
+      background-color: var(--color-primary-500);
+    }
+
+    /* ============================================================
+       로그인 로딩
+       ============================================================ */
+    #screen-login-loading {
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-4);
+    }
+
+    .loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--color-border-default);
+      border-top-color: var(--color-primary-500);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loading-text {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-secondary);
+    }
+
+    /* ============================================================
+       온보딩 스텝 공통 (닉네임·페르소나·조직명)
+       ============================================================ */
+    .step-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-8) var(--space-6);
+      padding-top: calc(var(--space-12) + env(safe-area-inset-top, 0px));
+      padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+    }
+
+    .step-title {
+      font-size: var(--font-size-h1);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      line-height: var(--line-height-tight);
+      margin-bottom: var(--space-2);
+    }
+
+    .step-subtitle {
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--line-height-normal);
+      margin-bottom: var(--space-8);
+    }
+
+    .step-body {
+      flex: 1;
+    }
+
+    .step-footer {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    /* ============================================================
+       공통 버튼
+       ============================================================ */
+    .btn-primary {
+      width: 100%;
+      height: 52px;
+      background-color: var(--color-primary-500);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background-color 150ms ease, opacity 150ms ease;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--color-primary-700);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-google {
+      width: 100%;
+      height: 52px;
+      background-color: #ffffff;
+      color: var(--color-text-primary);
+      border: 1.5px solid var(--color-border-strong);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-3);
+      transition: background-color 150ms ease;
+    }
+
+    .btn-google:hover {
+      background-color: var(--color-bg-secondary);
+    }
+
+    .btn-google-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .btn-text {
+      width: 100%;
+      height: 44px;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ============================================================
+       공통 인풋
+       ============================================================ */
+    .input-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .input-label {
+      font-size: var(--font-size-body-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+    }
+
+    .input-field {
+      width: 100%;
+      height: 52px;
+      padding: 0 var(--space-4);
+      border: 1.5px solid var(--color-border-default);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--font-size-body);
+      color: var(--color-text-primary);
+      background-color: var(--color-bg-elevated);
+      outline: none;
+      transition: border-color 150ms ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--color-primary-500);
+    }
+
+    .input-feedback {
+      font-size: var(--font-size-caption);
+      min-height: 18px;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       페르소나 카드
+       ============================================================ */
+    .persona-cards {
+      display: flex;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .persona-card {
+      flex: 1;
+      padding: var(--space-5) var(--space-4);
+      border: 2px solid var(--color-border-default);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-bg-elevated);
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 150ms ease, background-color 150ms ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .persona-card:hover {
+      border-color: var(--color-primary-200);
+      background-color: var(--color-primary-50);
+    }
+
+    .persona-card.selected {
+      border-color: var(--color-primary-500);
+      background-color: var(--color-primary-50);
+    }
+
+    .persona-card-icon {
+      font-size: 36px;
+      line-height: 1;
+    }
+
+    .persona-card-name {
+      font-size: var(--font-size-body-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+    }
+
+    .persona-card-desc {
+      font-size: var(--font-size-caption);
+      color: var(--color-text-tertiary);
+    }
+
+    .persona-preview-box {
+      background-color: var(--color-bg-secondary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      text-align: center;
+      font-size: var(--font-size-body-sm);
+      color: var(--color-primary-700);
+      font-weight: var(--font-weight-medium);
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ============================================================
+       조직명 미리보기
+       ============================================================ */
+    .org-preview {
+      margin-top: var(--space-3);
+      font-size: var(--font-size-body-sm);
+      color: var(--color-primary-500);
+      font-weight: var(--font-weight-medium);
+      min-height: 20px;
+    }
   </style>
 </head>
 <body>
 
   <div id="app">
 
+    <!-- ============================================================
+         PHASE 2-2: 인증 화면들
+         ============================================================ -->
+
+    <!-- 스플래시 -->
+    <div id="screen-splash" class="auth-screen active">
+      <div class="splash-logo">RichBuild</div>
+      <div class="splash-slogan">기록이 자산이 되다</div>
+      <div class="splash-spinner"></div>
+    </div>
+
+    <!-- 온보딩 소개 (3장 슬라이드) -->
+    <div id="screen-onboarding" class="auth-screen">
+      <div class="onboarding-top">
+        <button class="btn-skip" id="btn-skip">건너뛰기</button>
+      </div>
+
+      <div class="onboarding-slides-wrap">
+        <div class="onboarding-slide active" data-slide="0">
+          <div class="slide-icon">🏢</div>
+          <div class="slide-title">흩어진 계좌를<br>한 눈에</div>
+          <div class="slide-desc">여러 증권사 계좌를 한곳에 모아<br>포트폴리오를 한눈에 관리하세요.</div>
+        </div>
+        <div class="onboarding-slide" data-slide="1">
+          <div class="slide-icon">📰</div>
+          <div class="slide-title">내 종목 뉴스만<br>자동으로</div>
+          <div class="slide-desc">보유 종목 관련 뉴스가<br>자동으로 모입니다.</div>
+        </div>
+        <div class="onboarding-slide" data-slide="2">
+          <div class="slide-icon">📝</div>
+          <div class="slide-title">투자 근거를<br>기록하세요</div>
+          <div class="slide-desc">매수·매도 이유를 기록하고<br>나만의 투자 원칙을 세우세요.</div>
+        </div>
+      </div>
+
+      <div class="onboarding-bottom">
+        <div class="slide-dots">
+          <div class="dot active"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+
+        <!-- 1~2장: 다음 버튼 / 3장: 구글 로그인 버튼 -->
+        <button class="btn-primary" id="btn-slide-next">다음 →</button>
+        <button class="btn-google" id="btn-google-login" style="display:none;">
+          <svg class="btn-google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          구글로 시작하기
+        </button>
+      </div>
+    </div>
+
+    <!-- 로그인 로딩 -->
+    <div id="screen-login-loading" class="auth-screen">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">구글 로그인 중...</div>
+    </div>
+
+    <!-- 닉네임 설정 -->
+    <div id="screen-nickname" class="auth-screen">
+      <div class="step-screen">
+        <div class="step-title">닉네임을 정해볼까요?</div>
+        <div class="step-subtitle">앱 안에서 사용할 이름이에요.<br>언제든지 마이페이지에서 변경할 수 있어요.</div>
+        <div class="step-body">
+          <div class="input-wrap">
+            <label class="input-label" for="input-nickname">닉네임 (최대 10자)</label>
+            <input
+              type="text"
+              id="input-nickname"
+              class="input-field"
+              maxlength="10"
+              placeholder="예: 김투자"
+              autocomplete="off"
+            >
+            <div class="input-feedback" id="nickname-feedback"></div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <button class="btn-primary" id="btn-nickname-next" disabled>다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 페르소나 선택 -->
+    <div id="screen-persona" class="auth-screen">
+      <div class="step-screen">
+        <div class="step-title">나만의 세계관을<br>선택하세요</div>
+        <div class="step-subtitle">선택한 세계관에 따라 앱의 언어가 달라져요.</div>
+        <div class="step-body">
+          <div class="persona-cards">
+            <div class="persona-card" data-persona="ceo">
+              <div class="persona-card-icon">🏢</div>
+              <div class="persona-card-name">대표님 모드</div>
+              <div class="persona-card-desc">투자 회사 경영</div>
+            </div>
+            <div class="persona-card" data-persona="commander">
+              <div class="persona-card-icon">⚔️</div>
+              <div class="persona-card-name">사령관 모드</div>
+              <div class="persona-card-desc">투자 부대 지휘</div>
+            </div>
+          </div>
+          <div class="persona-preview-box" id="persona-preview">
+            카드를 선택하면 미리보기가 표시돼요.
+          </div>
+        </div>
+        <div class="step-footer">
+          <button class="btn-primary" id="btn-persona-next" disabled>다음 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 조직명 설정 -->
+    <div id="screen-org-name" class="auth-screen">
+      <div class="step-screen">
+        <div class="step-title" id="org-name-title">조직 이름을<br>지어볼까요?</div>
+        <div class="step-subtitle" id="org-name-subtitle">건너뛰면 자동으로 만들어드려요.</div>
+        <div class="step-body">
+          <div class="input-wrap">
+            <label class="input-label" for="input-org-name" id="org-name-label">조직명 (최대 15자, 선택)</label>
+            <input
+              type="text"
+              id="input-org-name"
+              class="input-field"
+              maxlength="15"
+              placeholder=""
+              autocomplete="off"
+            >
+            <div class="org-preview" id="org-name-preview"></div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <button class="btn-primary" id="btn-complete">시작하기 →</button>
+          <button class="btn-text" id="btn-org-skip">건너뛰기 (자동 생성)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         기존 메인 앱 (탭 구조)
+         ============================================================ -->
+
     <!-- 상단 앱바 -->
-    <header id="app-bar">
+    <header id="app-bar" style="display:none;">
       <span class="app-bar-logo">RichBuild</span>
     </header>
 
     <!-- 탭 콘텐츠 영역 -->
-    <main id="tab-content">
+    <main id="tab-content" style="display:none;">
       <div class="tab-page active" data-page="home">
         <span class="tab-page-label">홈</span>
       </div>
@@ -300,7 +837,7 @@
     </main>
 
     <!-- 하단 탭바 -->
-    <nav id="bottom-nav">
+    <nav id="bottom-nav" style="display:none;">
       <button class="tab-item active" data-tab="home">
         <span class="tab-label">홈</span>
       </button>
@@ -322,6 +859,9 @@
   </div>
 
   <script>
+    /* ============================================================
+       기존 탭 전환 (PHASE 0)
+       ============================================================ */
     var currentTab = 'home';
 
     function switchTab(tabName) {
@@ -332,14 +872,12 @@
 
       currentTab = tabName;
 
-      // 탭 버튼 활성 상태 전환
       document.querySelectorAll('.tab-item').forEach(function(btn) {
         btn.classList.remove('active');
       });
       var activeBtn = document.querySelector('.tab-item[data-tab="' + tabName + '"]');
       if (activeBtn) activeBtn.classList.add('active');
 
-      // 콘텐츠 영역 전환
       document.querySelectorAll('.tab-page').forEach(function(page) {
         page.classList.remove('active');
       });
@@ -347,12 +885,384 @@
       if (activePage) activePage.classList.add('active');
     }
 
-    // 탭 클릭 이벤트 등록
     document.querySelectorAll('.tab-item').forEach(function(btn) {
       btn.addEventListener('click', function() {
         switchTab(btn.dataset.tab);
       });
     });
+
+    /* ============================================================
+       PHASE 2-2: 인증 + 온보딩
+       ============================================================ */
+    var currentUser = null;
+    var currentSlide = 0;
+    var onboardingData = {
+      nickname: '',
+      nicknameDisplay: '',
+      personaMode: '',
+      orgName: ''
+    };
+
+    /* --- 화면 전환 --- */
+    function showScreen(screenId) {
+      document.querySelectorAll('.auth-screen').forEach(function(s) {
+        s.classList.remove('active');
+      });
+
+      var isMain = (screenId === 'screen-main');
+      document.getElementById('app-bar').style.display    = isMain ? '' : 'none';
+      document.getElementById('tab-content').style.display = isMain ? '' : 'none';
+      document.getElementById('bottom-nav').style.display  = isMain ? '' : 'none';
+
+      if (!isMain) {
+        var el = document.getElementById(screenId);
+        if (el) el.classList.add('active');
+      }
+    }
+
+    /* --- 토스트 알림 --- */
+    function showToast(msg, isError) {
+      var prev = document.getElementById('rb-toast');
+      if (prev) prev.remove();
+
+      var el = document.createElement('div');
+      el.id = 'rb-toast';
+      el.style.cssText =
+        'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);' +
+        'padding:12px 20px;border-radius:8px;font-size:14px;z-index:9999;' +
+        "font-family:'Noto Sans KR',sans-serif;white-space:nowrap;" +
+        'box-shadow:0 4px 12px rgba(0,0,0,0.12);' +
+        (isError
+          ? 'background:#FEE2E2;color:#E53935;'
+          : 'background:#E1F5EE;color:#0F6E56;');
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(function() { if (el.parentNode) el.remove(); }, 2500);
+    }
+
+    /* --- 앱 시작 --- */
+    async function initApp() {
+      showScreen('screen-splash');
+
+      await new Promise(function(r) { setTimeout(r, 1500); });
+
+      try {
+        var res = await window.supabase.auth.getSession();
+        var session = res.data && res.data.session;
+
+        if (session && session.user) {
+          currentUser = session.user;
+          await routeAfterAuth();
+        } else {
+          showScreen('screen-onboarding');
+        }
+      } catch (e) {
+        showScreen('screen-onboarding');
+      }
+    }
+
+    /* --- 로그인 후 라우팅 --- */
+    async function routeAfterAuth() {
+      try {
+        var res = await window.supabase
+          .from('users')
+          .select('onboarding_completed, persona_mode')
+          .eq('id', currentUser.id)
+          .maybeSingle();
+
+        if (!res.data) {
+          // 신규 사용자 — 온보딩으로
+          showScreen('screen-nickname');
+        } else if (res.data.onboarding_completed) {
+          // 기존 사용자 — 바로 메인으로
+          showScreen('screen-main');
+          switchTab('home');
+        } else {
+          // 온보딩 미완료 — 닉네임 화면으로
+          showScreen('screen-nickname');
+        }
+      } catch (e) {
+        showScreen('screen-nickname');
+      }
+    }
+
+    /* --- 구글 로그인 --- */
+    async function handleGoogleLogin() {
+      showScreen('screen-login-loading');
+
+      var redirectTo = window.location.protocol === 'file:'
+        ? 'https://jinhoo111.github.io/richbuild/index.html'
+        : (window.location.origin + '/richbuild/index.html');
+
+      var res = await window.supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: redirectTo }
+      });
+
+      if (res.error) {
+        showToast('로그인에 실패했어요: ' + res.error.message, true);
+        showScreen('screen-onboarding');
+      }
+      // 성공 시 → 브라우저가 Google로 이동
+    }
+
+    /* --- 온보딩 슬라이드 이동 --- */
+    function goToSlide(index) {
+      var slides = document.querySelectorAll('.onboarding-slide');
+      var dots   = document.querySelectorAll('.dot');
+      var btnNext   = document.getElementById('btn-slide-next');
+      var btnGoogle = document.getElementById('btn-google-login');
+
+      slides.forEach(function(s) { s.classList.remove('active'); });
+      dots.forEach(function(d)   { d.classList.remove('active'); });
+
+      if (slides[index]) slides[index].classList.add('active');
+      if (dots[index])   dots[index].classList.add('active');
+
+      currentSlide = index;
+
+      if (index === 2) {
+        btnNext.style.display   = 'none';
+        btnGoogle.style.display = '';
+      } else {
+        btnNext.style.display   = '';
+        btnGoogle.style.display = 'none';
+      }
+    }
+
+    /* --- 닉네임 중복 확인 (debounce 500ms) --- */
+    var nicknameTimer = null;
+
+    function onNicknameInput() {
+      var raw = document.getElementById('input-nickname').value;
+      var val = raw.replace(/#/g, '').trim();
+      document.getElementById('input-nickname').value = val;
+
+      var feedback = document.getElementById('nickname-feedback');
+      var btnNext  = document.getElementById('btn-nickname-next');
+
+      btnNext.disabled = true;
+      onboardingData.nickname = '';
+      onboardingData.nicknameDisplay = '';
+
+      if (!val) {
+        feedback.textContent = '';
+        return;
+      }
+
+      feedback.style.color = 'var(--color-text-tertiary)';
+      feedback.textContent = '확인 중...';
+
+      clearTimeout(nicknameTimer);
+      nicknameTimer = setTimeout(async function() {
+        try {
+          var res = await window.supabase
+            .from('users')
+            .select('id', { count: 'exact', head: true })
+            .eq('nickname', val);
+
+          var count = (res.count !== null && res.count !== undefined) ? res.count : 0;
+
+          if (count === 0) {
+            feedback.style.color = 'var(--color-success)';
+            feedback.textContent = '✓ 사용 가능한 닉네임이에요.';
+            onboardingData.nickname = val;
+            onboardingData.nicknameDisplay = val;
+            btnNext.disabled = false;
+          } else {
+            var display = val + '#' + (count + 1);
+            feedback.style.color = 'var(--color-warning)';
+            feedback.textContent = '이미 사용 중이에요. ' + display + ' 로 설정됩니다.';
+            onboardingData.nickname = val;
+            onboardingData.nicknameDisplay = display;
+            btnNext.disabled = false;
+          }
+        } catch (e) {
+          feedback.style.color = 'var(--color-error)';
+          feedback.textContent = '확인에 실패했어요. 다시 시도해주세요.';
+        }
+      }, 500);
+    }
+
+    /* --- 페르소나 선택 --- */
+    function onPersonaSelect(persona) {
+      onboardingData.personaMode = persona;
+
+      document.querySelectorAll('.persona-card').forEach(function(c) {
+        c.classList.remove('selected');
+      });
+      var card = document.querySelector('.persona-card[data-persona="' + persona + '"]');
+      if (card) card.classList.add('selected');
+
+      var pt       = window.PERSONA_TEXT[persona];
+      var suffix   = pt.orgSuffix[0];
+      var nickname = onboardingData.nickname || '나';
+      var preview  = document.getElementById('persona-preview');
+
+      preview.textContent =
+        '"' + nickname + ' ' + suffix + '" ' + pt.title + '의 ' + pt.portfolioSummaryLabel;
+
+      document.getElementById('btn-persona-next').disabled = false;
+    }
+
+    /* --- 조직명 화면 진입 --- */
+    function enterOrgNameScreen() {
+      var pt = window.PERSONA_TEXT[onboardingData.personaMode];
+      var isCeo = onboardingData.personaMode === 'ceo';
+      var nickname = onboardingData.nickname || '나의';
+
+      document.getElementById('org-name-title').textContent =
+        isCeo ? '투자 회사 이름을\n지어볼까요?' : '투자 부대 이름을\n지어볼까요?';
+      document.getElementById('org-name-label').textContent =
+        isCeo ? '회사명 (최대 15자, 선택)' : '부대명 (최대 15자, 선택)';
+      document.getElementById('input-org-name').placeholder =
+        isCeo ? '예: ' + nickname + ' 에셋' : '예: ' + nickname + ' 사단';
+
+      document.getElementById('input-org-name').value = '';
+      document.getElementById('org-name-preview').textContent = '';
+
+      showScreen('screen-org-name');
+    }
+
+    /* --- 조직명 입력 미리보기 --- */
+    function onOrgNameInput() {
+      var val     = document.getElementById('input-org-name').value.trim();
+      var preview = document.getElementById('org-name-preview');
+      onboardingData.orgName = val;
+
+      if (val) {
+        preview.textContent = '"' + val + '" 으로 시작합니다!';
+      } else {
+        preview.textContent = '';
+      }
+    }
+
+    /* --- 조직명 자동 생성 --- */
+    function generateOrgName() {
+      var pt       = window.PERSONA_TEXT[onboardingData.personaMode];
+      var suffixes = pt.orgSuffix;
+      var suffix   = suffixes[Math.floor(Math.random() * suffixes.length)];
+      return (onboardingData.nickname || '나의') + ' ' + suffix;
+    }
+
+    /* --- 온보딩 완료 처리 --- */
+    async function completeOnboarding() {
+      var btnComplete = document.getElementById('btn-complete');
+      btnComplete.disabled = true;
+      btnComplete.textContent = '저장 중...';
+
+      if (!onboardingData.orgName) {
+        onboardingData.orgName = generateOrgName();
+      }
+
+      try {
+        var uid   = currentUser.id;
+        var email = currentUser.email;
+
+        // 1. users INSERT
+        var r1 = await window.supabase.from('users').insert({
+          id:                   uid,
+          email:                email,
+          nickname:             onboardingData.nickname,
+          nickname_display:     onboardingData.nicknameDisplay,
+          persona_mode:         onboardingData.personaMode,
+          org_name:             onboardingData.orgName,
+          onboarding_completed: true
+        });
+        if (r1.error) throw r1.error;
+
+        // 2. subscriptions INSERT
+        var r2 = await window.supabase.from('subscriptions').insert({
+          user_id:    uid,
+          plan:       'free',
+          status:     'active',
+          started_at: new Date().toISOString()
+        });
+        if (r2.error) throw r2.error;
+
+        // 3. investment_commandments 기본 3개 INSERT
+        var r3 = await window.supabase.from('investment_commandments').insert([
+          { user_id: uid, content: '손절가를 미리 정하고 지킨다',   display_order: 1 },
+          { user_id: uid, content: '분산 투자, 한 종목 20% 이하',   display_order: 2 },
+          { user_id: uid, content: '감정적 매매를 하지 않는다',     display_order: 3 }
+        ]);
+        if (r3.error) throw r3.error;
+
+        showScreen('screen-main');
+        switchTab('home');
+        showToast('환영합니다, ' + onboardingData.nicknameDisplay + ' 님! 🎉');
+
+      } catch (e) {
+        showToast('저장에 실패했어요: ' + (e.message || '다시 시도해주세요.'), true);
+        btnComplete.disabled = false;
+        btnComplete.textContent = '시작하기 →';
+      }
+    }
+
+    /* --- 로그아웃 --- */
+    async function handleLogout() {
+      await window.supabase.auth.signOut();
+      currentUser = null;
+      onboardingData = { nickname: '', nicknameDisplay: '', personaMode: '', orgName: '' };
+      showScreen('screen-splash');
+      setTimeout(function() { showScreen('screen-onboarding'); goToSlide(0); }, 800);
+    }
+
+    /* --- 이벤트 등록 --- */
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // 건너뛰기 → 게스트 모드
+      document.getElementById('btn-skip').addEventListener('click', function() {
+        showScreen('screen-main');
+        switchTab('home');
+      });
+
+      // 슬라이드 다음
+      document.getElementById('btn-slide-next').addEventListener('click', function() {
+        if (currentSlide < 2) goToSlide(currentSlide + 1);
+      });
+
+      // 구글 로그인
+      document.getElementById('btn-google-login').addEventListener('click', handleGoogleLogin);
+
+      // 닉네임 입력
+      document.getElementById('input-nickname').addEventListener('input', onNicknameInput);
+
+      // 닉네임 다음
+      document.getElementById('btn-nickname-next').addEventListener('click', function() {
+        showScreen('screen-persona');
+      });
+
+      // 페르소나 카드 클릭
+      document.querySelectorAll('.persona-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          onPersonaSelect(card.dataset.persona);
+        });
+      });
+
+      // 페르소나 다음
+      document.getElementById('btn-persona-next').addEventListener('click', function() {
+        enterOrgNameScreen();
+      });
+
+      // 조직명 입력
+      document.getElementById('input-org-name').addEventListener('input', onOrgNameInput);
+
+      // 완료
+      document.getElementById('btn-complete').addEventListener('click', completeOnboarding);
+
+      // 조직명 건너뛰기
+      document.getElementById('btn-org-skip').addEventListener('click', function() {
+        onboardingData.orgName = '';
+        completeOnboarding();
+      });
+
+      // 앱 시작
+      initApp();
+    });
+
+    /* window에 로그아웃 함수 노출 (마이페이지 PHASE 7에서 호출) */
+    window.handleLogout = handleLogout;
   </script>
   <script src="supabase-client.js"></script>
 

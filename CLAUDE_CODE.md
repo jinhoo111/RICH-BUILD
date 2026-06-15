@@ -181,22 +181,22 @@ PHASE 23  React Native 앱 전환 + Play Store
   ✅ CLAUDE_CODE.md (전체 Phase 0~10 프롬프트 완성)
 
 [개발 진행 상태]
-  ⏳ PHASE 0  환경 세팅
-    □ 0-1. VS Code + GitHub Desktop 설치 확인
-    □ 0-2. Supabase 계정 + 프로젝트 생성
-    □ 0-3. GitHub 레포 생성 + Pages 설정
-    □ 0-4. index.html 뼈대 + CSS 토큰 등록
-    □ 0-5. persona-text.js 생성
-    □ 0-6. supabase-client.js 생성 + 연결 테스트
-    □ 0-7. GitHub Pages 배포 + 최종 확인
+  ✅ PHASE 0  환경 세팅 완료 (commit: d5b1667)
+    ✅ 0-1. VS Code + GitHub Desktop 설치 확인
+    ✅ 0-2. Supabase 계정 + 프로젝트 생성
+    ✅ 0-3. GitHub 레포 생성 + Pages 설정
+    ✅ 0-4. index.html 뼈대 + CSS 토큰 등록
+    ✅ 0-5. persona-text.js 생성
+    ✅ 0-6. supabase-client.js 생성 + 연결 테스트
+    ✅ 0-7. GitHub Pages 배포 + 최종 확인
 
-  ⏳ PHASE 1  Supabase 스키마
-    □ 1-1. 테이블 23개 순차 생성
-    □ 1-2. app_config 초기값 INSERT + RLS 설정
+  ✅ PHASE 1  Supabase 스키마 완료 (Supabase DB 직접 적용)
+    ✅ 1-1. 테이블 23개 순차 생성
+    ✅ 1-2. app_config 초기값 INSERT + RLS 정책 8개 테이블 적용
 
-  ⏳ PHASE 2  인증 + 온보딩
-    □ 2-1. 구글 OAuth 설정
-    □ 2-2. 인증 + 온보딩 전체 구현
+  ⏳ PHASE 2  인증 + 온보딩   ← 지금 여기
+    □ 2-1. 구글 OAuth 설정 (Google Cloud Console + Supabase Auth 대시보드)
+    □ 2-2. 인증 + 온보딩 전체 구현 (index.html)
 
   ⏳ PHASE 3  다중 계좌 관리 (킬러 기능)
     □ 3-1. 계좌 CRUD
@@ -235,7 +235,10 @@ PHASE 23  React Native 앱 전환 + Play Store
 
 [파일 구조 현재 상태]
   richbuild/
-  (아직 없음 — PHASE 0 실행 후 생성 예정)
+  ├── index.html         ✅ PHASE 0 완료
+  ├── persona-text.js    ✅ PHASE 0 완료
+  └── supabase-client.js ✅ PHASE 0 완료
+  Supabase DB: 테이블 23개 + app_config 초기값 + RLS 8개 테이블 ✅ PHASE 1 완료
 ```
 
 > 새 세션 시작 시 이 섹션을 보고 현재 Phase 확인 후 해당 프롬프트로 이동
