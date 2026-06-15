@@ -683,6 +683,163 @@
       font-weight: var(--font-weight-medium);
       min-height: 20px;
     }
+
+    /* ============================================================
+       PHASE 3-1: 홈 탭 — 계좌 목록
+       ============================================================ */
+    .tab-page[data-page="home"] {
+      align-items: stretch;
+      justify-content: flex-start;
+      padding: var(--space-4);
+      overflow-y: auto;
+      height: calc(100vh - 112px);
+    }
+
+    .home-section-label {
+      font-size: 11px;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-tertiary);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: var(--space-3);
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px var(--space-6) var(--space-6);
+      gap: var(--space-3);
+      text-align: center;
+    }
+    .empty-icon { font-size: 48px; line-height: 1; }
+    .empty-title { font-size: var(--font-size-body); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); }
+    .empty-desc  { font-size: var(--font-size-body-sm); color: var(--color-text-tertiary); line-height: var(--line-height-relaxed); }
+
+    .account-card {
+      background: var(--color-bg-elevated);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+    }
+    .account-card-info { display: flex; flex-direction: column; gap: var(--space-1); }
+    .account-card-broker { font-size: var(--font-size-caption); color: var(--color-text-tertiary); }
+    .account-card-name   { font-size: var(--font-size-body); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+
+    .account-more-btn {
+      background: none; border: none;
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      font-size: 20px; color: var(--color-text-tertiary);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background-color 150ms ease;
+    }
+    .account-more-btn:hover { background: var(--color-bg-secondary); }
+
+    #fab-add {
+      position: fixed;
+      bottom: calc(56px + 20px);
+      right: max(16px, calc(50% - 224px));
+      width: 52px; height: 52px;
+      background: var(--color-primary-500);
+      color: #fff; border: none;
+      border-radius: var(--radius-full);
+      font-size: 28px; line-height: 1;
+      cursor: pointer;
+      display: none;
+      align-items: center; justify-content: center;
+      box-shadow: var(--shadow-lg);
+      z-index: 90;
+      transition: background-color 150ms ease;
+    }
+    #fab-add:hover { background: var(--color-primary-700); }
+
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 300;
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-sheet {
+      width: 100%; max-width: 480px;
+      background: var(--color-bg-elevated);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 0 var(--space-6) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+      max-height: 88vh; overflow-y: auto;
+    }
+    .modal-handle {
+      width: 36px; height: 4px;
+      background: var(--color-border-strong);
+      border-radius: var(--radius-full);
+      margin: var(--space-3) auto var(--space-5);
+    }
+    .modal-hd {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--space-5);
+    }
+    .modal-ttl { font-size: var(--font-size-h3); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+    .modal-x   { background: none; border: none; font-size: 20px; color: var(--color-text-tertiary); cursor: pointer; line-height: 1; padding: 4px; }
+
+    .form-label { font-size: var(--font-size-body-sm); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); margin-bottom: var(--space-2); }
+
+    .broker-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-2); margin-bottom: var(--space-5);
+    }
+    .broker-chip {
+      padding: var(--space-3) var(--space-1);
+      border: 1.5px solid var(--color-border-default);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-primary);
+      font-family: var(--font-body);
+      font-size: 12px; font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      cursor: pointer; text-align: center;
+      transition: border-color 150ms, background-color 150ms, color 150ms;
+    }
+    .broker-chip:hover { border-color: var(--color-primary-200); background: var(--color-primary-50); }
+    .broker-chip.on    { border-color: var(--color-primary-500); background: var(--color-primary-50); color: var(--color-primary-700); font-weight: var(--font-weight-bold); }
+
+    .modal-gap { display: flex; flex-direction: column; gap: var(--space-3); margin-top: var(--space-6); }
+
+    .btn-danger {
+      width: 100%; height: 52px;
+      background: var(--color-error); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: var(--font-size-body); font-weight: var(--font-weight-medium);
+      cursor: pointer; transition: opacity 150ms;
+    }
+    .btn-danger:hover    { opacity: 0.85; }
+    .btn-danger:disabled { opacity: 0.5; cursor: default; }
+
+    .btn-ghost {
+      width: 100%; height: 52px;
+      background: var(--color-bg-secondary); color: var(--color-text-secondary);
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: var(--font-size-body); font-weight: var(--font-weight-medium);
+      cursor: pointer;
+    }
+
+    .action-btn {
+      width: 100%; height: 52px;
+      background: var(--color-bg-secondary); color: var(--color-text-primary);
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-body); font-size: var(--font-size-body); font-weight: var(--font-weight-medium);
+      cursor: pointer; text-align: left; padding: 0 var(--space-4);
+      transition: background-color 150ms;
+    }
+    .action-btn:hover { background: var(--color-gray-100); }
+
+    .del-desc { font-size: var(--font-size-body-sm); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
   </style>
 </head>
 <body>
@@ -845,7 +1002,23 @@
     <!-- 탭 콘텐츠 영역 -->
     <main id="tab-content" style="display:none;">
       <div class="tab-page active" data-page="home">
-        <span class="tab-page-label">홈</span>
+        <!-- 게스트(비로그인) 안내 -->
+        <div id="home-guest" class="empty-state" style="display:none;">
+          <div class="empty-icon">🔐</div>
+          <div class="empty-title">로그인이 필요해요</div>
+          <div class="empty-desc">구글 로그인 후 계좌를 관리할 수 있어요.</div>
+        </div>
+        <!-- 로그인 사용자: 계좌 목록 -->
+        <div id="home-accounts" style="display:none;">
+          <div class="home-section-label">내 계좌</div>
+          <div id="accounts-loading" style="text-align:center;padding:32px 0;color:var(--color-text-tertiary);font-size:14px;">불러오는 중...</div>
+          <div id="accounts-empty" class="empty-state" style="display:none;">
+            <div class="empty-icon">🏦</div>
+            <div class="empty-title">아직 계좌가 없어요</div>
+            <div class="empty-desc">아래 + 버튼을 눌러<br>첫 번째 계좌를 추가해보세요.</div>
+          </div>
+          <div id="accounts-list"></div>
+        </div>
       </div>
       <div class="tab-page" data-page="news">
         <span class="tab-page-label">뉴스</span>
@@ -880,6 +1053,64 @@
         <span class="tab-label">마이</span>
       </button>
     </nav>
+
+    <!-- FAB: 계좌 추가 -->
+    <button id="fab-add" aria-label="계좌 추가">＋</button>
+
+    <!-- 계좌 추가/수정 모달 -->
+    <div id="modal-account-form" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-hd">
+          <div class="modal-ttl" id="form-title">계좌 추가</div>
+          <button class="modal-x" id="btn-form-close">✕</button>
+        </div>
+        <div class="form-label">증권사</div>
+        <div class="broker-grid" id="broker-grid"></div>
+        <div id="custom-broker-wrap" class="input-wrap" style="display:none; margin-bottom:var(--space-4);">
+          <label class="input-label" for="input-custom-broker">증권사명 직접 입력</label>
+          <input type="text" id="input-custom-broker" class="input-field" maxlength="20" placeholder="증권사명을 입력하세요" autocomplete="off">
+        </div>
+        <div class="input-wrap">
+          <label class="input-label" for="input-account-name">계좌 별칭 (선택, 최대 20자)</label>
+          <input type="text" id="input-account-name" class="input-field" maxlength="20" placeholder="예: 주계좌, 적립식" autocomplete="off">
+        </div>
+        <div class="modal-gap">
+          <button class="btn-primary" id="btn-form-save" disabled>저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 계좌 옵션 액션시트 (수정/삭제 선택) -->
+    <div id="modal-account-actions" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-hd">
+          <div class="modal-ttl" id="actions-title">계좌 설정</div>
+          <button class="modal-x" id="btn-actions-close">✕</button>
+        </div>
+        <div class="modal-gap">
+          <button class="action-btn" id="btn-action-edit">✏️ &nbsp;수정하기</button>
+          <button class="btn-danger" id="btn-action-delete">삭제하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 계좌 삭제 확인 모달 -->
+    <div id="modal-account-delete" class="modal-overlay">
+      <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-hd">
+          <div class="modal-ttl">계좌 삭제</div>
+          <button class="modal-x" id="btn-delete-close">✕</button>
+        </div>
+        <div class="del-desc" id="delete-desc">이 계좌를 삭제하시겠어요?<br>삭제하면 되돌릴 수 없어요.</div>
+        <div class="modal-gap">
+          <button class="btn-danger" id="btn-confirm-delete">삭제하기</button>
+          <button class="btn-ghost" id="btn-cancel-delete">취소</button>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -1314,6 +1545,231 @@
 
       // 앱 시작
       initApp();
+    });
+
+    /* ============================================================
+       PHASE 3-1: 계좌 CRUD
+       ============================================================ */
+    var BROKERS = [
+      '키움증권', '미래에셋', '삼성증권',
+      'NH투자', '한국투자', 'KB증권',
+      '신한투자', '대신증권', '토스증권',
+      '카카오페이', '유안타증권', '기타'
+    ];
+
+    var acctFormMode     = 'add';
+    var acctEditId       = null;
+    var acctActionTarget = null;
+    var selectedBroker   = '';
+
+    function showHomeSections() {
+      var isUser = !!currentUser;
+      document.getElementById('home-guest').style.display    = isUser ? 'none' : 'flex';
+      document.getElementById('home-accounts').style.display = isUser ? 'block' : 'none';
+      document.getElementById('fab-add').style.display       = isUser ? 'flex' : 'none';
+      if (isUser) loadAccounts();
+    }
+
+    async function loadAccounts() {
+      if (!currentUser) return;
+      document.getElementById('accounts-loading').style.display = 'block';
+      document.getElementById('accounts-empty').style.display   = 'none';
+      document.getElementById('accounts-list').innerHTML = '';
+
+      var res = await window.supabase
+        .from('accounts')
+        .select('id, broker_name, account_nickname, created_at')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: true });
+
+      document.getElementById('accounts-loading').style.display = 'none';
+
+      if (res.error) { showToast('계좌를 불러오지 못했어요.', true); return; }
+
+      var list = res.data || [];
+      if (list.length === 0) {
+        document.getElementById('accounts-empty').style.display = 'flex';
+        return;
+      }
+
+      var container = document.getElementById('accounts-list');
+      list.forEach(function(acct) {
+        var card = document.createElement('div');
+        card.className = 'account-card';
+        var displayName = acct.account_nickname || acct.broker_name;
+        var subLabel    = acct.account_nickname ? acct.broker_name : '';
+        card.innerHTML =
+          '<div class="account-card-info">' +
+            (subLabel ? '<div class="account-card-broker">' + subLabel + '</div>' : '') +
+            '<div class="account-card-name">' + displayName + '</div>' +
+          '</div>' +
+          '<button class="account-more-btn" aria-label="계좌 옵션">⋮</button>';
+        card.querySelector('.account-more-btn').addEventListener('click', function(e) {
+          e.stopPropagation();
+          openActionsModal(acct);
+        });
+        container.appendChild(card);
+      });
+    }
+
+    function renderBrokerGrid() {
+      var grid = document.getElementById('broker-grid');
+      grid.innerHTML = '';
+      BROKERS.forEach(function(b) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'broker-chip' + (selectedBroker === b ? ' on' : '');
+        btn.textContent = b;
+        btn.addEventListener('click', function() {
+          selectedBroker = b;
+          grid.querySelectorAll('.broker-chip').forEach(function(c) { c.classList.remove('on'); });
+          btn.classList.add('on');
+          var isCustom = (b === '기타');
+          document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
+          if (isCustom) document.getElementById('input-custom-broker').focus();
+          updateFormSaveBtn();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function updateFormSaveBtn() {
+      var customOk = document.getElementById('input-custom-broker').value.trim() !== '';
+      var ok = selectedBroker && (selectedBroker !== '기타' || customOk);
+      document.getElementById('btn-form-save').disabled = !ok;
+    }
+
+    function openAddModal() {
+      acctFormMode = 'add'; acctEditId = null; selectedBroker = '';
+      document.getElementById('form-title').textContent = '계좌 추가';
+      document.getElementById('input-account-name').value = '';
+      document.getElementById('input-custom-broker').value = '';
+      document.getElementById('custom-broker-wrap').style.display = 'none';
+      renderBrokerGrid();
+      updateFormSaveBtn();
+      document.getElementById('modal-account-form').classList.add('open');
+    }
+
+    function openEditModal(acct) {
+      acctFormMode = 'edit'; acctEditId = acct.id;
+      selectedBroker = BROKERS.indexOf(acct.broker_name) !== -1 ? acct.broker_name : '기타';
+      document.getElementById('form-title').textContent = '계좌 수정';
+      document.getElementById('input-account-name').value = acct.account_nickname || '';
+      var isCustom = selectedBroker === '기타';
+      document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
+      document.getElementById('input-custom-broker').value = isCustom ? acct.broker_name : '';
+      renderBrokerGrid();
+      updateFormSaveBtn();
+      document.getElementById('modal-account-form').classList.add('open');
+    }
+
+    function openActionsModal(acct) {
+      acctActionTarget = acct;
+      var name = acct.account_nickname
+        ? acct.account_nickname + ' (' + acct.broker_name + ')'
+        : acct.broker_name;
+      document.getElementById('actions-title').textContent = name;
+      document.getElementById('modal-account-actions').classList.add('open');
+    }
+
+    function openDeleteModal(acct) {
+      acctEditId = acct.id;
+      var name = acct.account_nickname
+        ? '"' + acct.account_nickname + '" (' + acct.broker_name + ')'
+        : '"' + acct.broker_name + '"';
+      document.getElementById('delete-desc').innerHTML =
+        name + ' 계좌를 삭제하시겠어요?<br>삭제하면 되돌릴 수 없어요.';
+      document.getElementById('modal-account-delete').classList.add('open');
+    }
+
+    function closeFormModal()    { document.getElementById('modal-account-form').classList.remove('open'); }
+    function closeActionsModal() { document.getElementById('modal-account-actions').classList.remove('open'); acctActionTarget = null; }
+    function closeDeleteModal()  { document.getElementById('modal-account-delete').classList.remove('open'); acctEditId = null; }
+
+    async function saveAccount() {
+      var brokerName = selectedBroker === '기타'
+        ? document.getElementById('input-custom-broker').value.trim()
+        : selectedBroker;
+      var nickname = document.getElementById('input-account-name').value.trim();
+      if (!brokerName) { showToast('증권사를 선택해주세요.', true); return; }
+
+      var btn = document.getElementById('btn-form-save');
+      btn.disabled = true; btn.textContent = '저장 중...';
+      try {
+        if (acctFormMode === 'add') {
+          var r = await window.supabase.from('accounts').insert({
+            user_id: currentUser.id, broker_name: brokerName, account_nickname: nickname
+          });
+          if (r.error) throw r.error;
+          showToast('계좌가 추가됐어요! 🎉');
+        } else {
+          var r2 = await window.supabase.from('accounts').update({
+            broker_name: brokerName, account_nickname: nickname
+          }).eq('id', acctEditId);
+          if (r2.error) throw r2.error;
+          showToast('계좌가 수정됐어요.');
+        }
+        closeFormModal();
+        await loadAccounts();
+      } catch (e) {
+        showToast('저장 실패: ' + (e.message || ''), true);
+      } finally {
+        btn.disabled = false; btn.textContent = '저장';
+      }
+    }
+
+    async function deleteAccount() {
+      if (!acctEditId) return;
+      var btn = document.getElementById('btn-confirm-delete');
+      btn.disabled = true; btn.textContent = '삭제 중...';
+      try {
+        var r = await window.supabase.from('accounts').delete().eq('id', acctEditId);
+        if (r.error) throw r.error;
+        showToast('계좌가 삭제됐어요.');
+        closeDeleteModal();
+        await loadAccounts();
+      } catch (e) {
+        showToast('삭제 실패: ' + (e.message || ''), true);
+      } finally {
+        btn.disabled = false; btn.textContent = '삭제하기';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('fab-add').addEventListener('click', openAddModal);
+
+      document.getElementById('btn-form-close').addEventListener('click', closeFormModal);
+      document.getElementById('btn-form-save').addEventListener('click', saveAccount);
+      document.getElementById('input-account-name').addEventListener('input', updateFormSaveBtn);
+      document.getElementById('input-custom-broker').addEventListener('input', updateFormSaveBtn);
+      document.getElementById('modal-account-form').addEventListener('click', function(e) {
+        if (e.target === this) closeFormModal();
+      });
+
+      document.getElementById('btn-actions-close').addEventListener('click', closeActionsModal);
+      document.getElementById('btn-action-edit').addEventListener('click', function() {
+        var t = acctActionTarget; closeActionsModal(); if (t) openEditModal(t);
+      });
+      document.getElementById('btn-action-delete').addEventListener('click', function() {
+        var t = acctActionTarget; closeActionsModal(); if (t) openDeleteModal(t);
+      });
+      document.getElementById('modal-account-actions').addEventListener('click', function(e) {
+        if (e.target === this) closeActionsModal();
+      });
+
+      document.getElementById('btn-delete-close').addEventListener('click', closeDeleteModal);
+      document.getElementById('btn-confirm-delete').addEventListener('click', deleteAccount);
+      document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
+      document.getElementById('modal-account-delete').addEventListener('click', function(e) {
+        if (e.target === this) closeDeleteModal();
+      });
+
+      var homeTabPage = document.querySelector('.tab-page[data-page="home"]');
+      if (homeTabPage) {
+        new MutationObserver(function() {
+          if (homeTabPage.classList.contains('active')) showHomeSections();
+        }).observe(homeTabPage, { attributes: true, attributeFilter: ['class'] });
+      }
     });
 
     /* window에 로그아웃 함수 노출 (마이페이지 PHASE 7에서 호출) */
