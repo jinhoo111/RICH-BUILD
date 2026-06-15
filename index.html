@@ -1738,12 +1738,21 @@
       btn.disabled = true; btn.textContent = '저장 중...';
       try {
         if (acctFormMode === 'add') {
+          var countRes = await window.supabase
+            .from('accounts')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', currentUser.id);
+          var nextOrder = (countRes.count || 0) + 1;
+
           var r = await window.supabase.from('accounts').insert({
-            user_id: currentUser.id,
-            broker_name: brokerName,
+            user_id:       currentUser.id,
+            broker_name:   brokerName,
             account_alias: nickname,
-            account_type: 'real',
-            currency: selectedCurrency
+            account_type:  'real',
+            currency:      selectedCurrency,
+            cash_balance:  0,
+            is_verified:   false,
+            display_order: nextOrder
           });
           if (r.error) throw r.error;
           showToast('계좌가 추가됐어요! 🎉');
