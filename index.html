@@ -991,8 +991,8 @@
       showScreen('screen-login-loading');
 
       var redirectTo = window.location.protocol === 'file:'
-        ? 'https://jinhoo111.github.io/richbuild/index.html'
-        : (window.location.origin + '/richbuild/index.html');
+        ? 'https://jinhoo111.github.io/RICH-BUILD/index.html'
+        : (window.location.origin + window.location.pathname);
 
       var res = await window.supabase.auth.signInWithOAuth({
         provider: 'google',
