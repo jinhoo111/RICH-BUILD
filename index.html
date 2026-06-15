@@ -1183,8 +1183,8 @@
         var uid   = currentUser.id;
         var email = currentUser.email;
 
-        // 1. users INSERT
-        var r1 = await window.supabase.from('users').insert({
+        // 1. users upsert (이미 존재하면 업데이트, 없으면 생성)
+        var r1 = await window.supabase.from('users').upsert({
           id:                   uid,
           email:                email,
           nickname:             onboardingData.nickname,
@@ -1192,25 +1192,31 @@
           persona_mode:         onboardingData.personaMode,
           org_name:             onboardingData.orgName,
           onboarding_completed: true
-        });
+        }, { onConflict: 'id' });
         if (r1.error) throw r1.error;
 
-        // 2. subscriptions INSERT
-        var r2 = await window.supabase.from('subscriptions').insert({
+        // 2. subscriptions upsert (이미 존재하면 업데이트)
+        var r2 = await window.supabase.from('subscriptions').upsert({
           user_id:    uid,
           plan:       'free',
           status:     'active',
           started_at: new Date().toISOString()
-        });
+        }, { onConflict: 'user_id' });
         if (r2.error) throw r2.error;
 
-        // 3. investment_commandments 기본 3개 INSERT
-        var r3 = await window.supabase.from('investment_commandments').insert([
-          { user_id: uid, content: '손절가를 미리 정하고 지킨다',   display_order: 1 },
-          { user_id: uid, content: '분산 투자, 한 종목 20% 이하',   display_order: 2 },
-          { user_id: uid, content: '감정적 매매를 하지 않는다',     display_order: 3 }
-        ]);
-        if (r3.error) throw r3.error;
+        // 3. investment_commandments — 없을 때만 기본 3개 생성
+        var existing = await window.supabase
+          .from('investment_commandments')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', uid);
+        if (!existing.count || existing.count === 0) {
+          var r3 = await window.supabase.from('investment_commandments').insert([
+            { user_id: uid, content: '손절가를 미리 정하고 지킨다',   display_order: 1 },
+            { user_id: uid, content: '분산 투자, 한 종목 20% 이하',   display_order: 2 },
+            { user_id: uid, content: '감정적 매매를 하지 않는다',     display_order: 3 }
+          ]);
+          if (r3.error) throw r3.error;
+        }
 
         showScreen('screen-main');
         switchTab('home');
