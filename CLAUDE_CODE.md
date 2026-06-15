@@ -194,11 +194,11 @@ PHASE 23  React Native 앱 전환 + Play Store
     ✅ 1-1. 테이블 23개 순차 생성
     ✅ 1-2. app_config 초기값 INSERT + RLS 정책 8개 테이블 적용
 
-  ⏳ PHASE 2  인증 + 온보딩   ← 지금 여기
-    □ 2-1. 구글 OAuth 설정 (Google Cloud Console + Supabase Auth 대시보드)
-    □ 2-2. 인증 + 온보딩 전체 구현 (index.html)
+  ✅ PHASE 2  인증 + 온보딩 완료
+    ✅ 2-1. 구글 OAuth 설정 (Google Cloud Console + Supabase Auth 대시보드)
+    ✅ 2-2. 인증 + 온보딩 전체 구현 (index.html)
 
-  ⏳ PHASE 3  다중 계좌 관리 (킬러 기능)
+  ⏳ PHASE 3  다중 계좌 관리 (킬러 기능)   ← 지금 여기
     □ 3-1. 계좌 CRUD
     □ 3-2. 종목 CRUD + 수익률 계산
     □ 3-3. 국내 주가 연동 + 티커 자동완성

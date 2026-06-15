@@ -652,6 +652,28 @@
     }
 
     /* ============================================================
+       뒤로가기 버튼
+       ============================================================ */
+    .btn-back {
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-size: var(--font-size-body-sm);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      padding: var(--space-4) var(--space-6);
+      padding-top: calc(var(--space-6) + env(safe-area-inset-top, 0px));
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .step-screen.has-back {
+      padding-top: var(--space-4);
+    }
+
+    /* ============================================================
        조직명 미리보기
        ============================================================ */
     .org-preview {
@@ -756,7 +778,8 @@
 
     <!-- 페르소나 선택 -->
     <div id="screen-persona" class="auth-screen">
-      <div class="step-screen">
+      <button class="btn-back" id="btn-persona-back">← 뒤로</button>
+      <div class="step-screen has-back">
         <div class="step-title">나만의 세계관을<br>선택하세요</div>
         <div class="step-subtitle">선택한 세계관에 따라 앱의 언어가 달라져요.</div>
         <div class="step-body">
@@ -784,7 +807,8 @@
 
     <!-- 조직명 설정 -->
     <div id="screen-org-name" class="auth-screen">
-      <div class="step-screen">
+      <button class="btn-back" id="btn-org-back">← 뒤로</button>
+      <div class="step-screen has-back">
         <div class="step-title" id="org-name-title">조직 이름을<br>지어볼까요?</div>
         <div class="step-subtitle" id="org-name-subtitle">건너뛰면 자동으로 만들어드려요.</div>
         <div class="step-body">
@@ -1230,6 +1254,16 @@
 
       // 닉네임 다음
       document.getElementById('btn-nickname-next').addEventListener('click', function() {
+        showScreen('screen-persona');
+      });
+
+      // 페르소나 뒤로가기 → 닉네임 화면
+      document.getElementById('btn-persona-back').addEventListener('click', function() {
+        showScreen('screen-nickname');
+      });
+
+      // 조직명 뒤로가기 → 페르소나 화면
+      document.getElementById('btn-org-back').addEventListener('click', function() {
         showScreen('screen-persona');
       });
 
