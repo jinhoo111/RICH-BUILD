@@ -1184,68 +1184,48 @@
         var uid   = currentUser.id;
         var email = currentUser.email;
 
-        // 1. users — 존재 여부 확인 후 INSERT 또는 UPDATE
-        var checkUser = await window.supabase
-          .from('users')
-          .select('id')
-          .eq('id', uid)
-          .maybeSingle();
-
-        if (checkUser.data) {
-          // 이미 있으면 UPDATE
-          var r1 = await window.supabase.from('users').update({
-            nickname:             onboardingData.nickname,
-            nickname_display:     onboardingData.nicknameDisplay,
-            persona_mode:         onboardingData.personaMode,
-            org_name:             onboardingData.orgName,
-            onboarding_completed: true
-          }).eq('id', uid);
-          if (r1.error) throw r1.error;
-        } else {
-          // 없으면 INSERT
-          var r1b = await window.supabase.from('users').insert({
-            id:                   uid,
-            email:                email,
-            nickname:             onboardingData.nickname,
-            nickname_display:     onboardingData.nicknameDisplay,
-            persona_mode:         onboardingData.personaMode,
-            org_name:             onboardingData.orgName,
-            onboarding_completed: true
-          });
-          if (r1b.error) throw r1b.error;
+        // 1. users — INSERT 시도, 중복이면 UPDATE
+        var r1 = await window.supabase.from('users').insert({
+          id:                   uid,
+          email:                email,
+          nickname:             onboardingData.nickname,
+          nickname_display:     onboardingData.nicknameDisplay,
+          persona_mode:         onboardingData.personaMode,
+          org_name:             onboardingData.orgName,
+          onboarding_completed: true
+        });
+        if (r1.error) {
+          if (r1.error.code === '23505') {
+            // 이미 존재 → UPDATE
+            var r1u = await window.supabase.from('users').update({
+              nickname:             onboardingData.nickname,
+              nickname_display:     onboardingData.nicknameDisplay,
+              persona_mode:         onboardingData.personaMode,
+              org_name:             onboardingData.orgName,
+              onboarding_completed: true
+            }).eq('id', uid);
+            if (r1u.error) throw r1u.error;
+          } else {
+            throw r1.error;
+          }
         }
 
-        // 2. subscriptions — 없을 때만 INSERT
-        var checkSub = await window.supabase
-          .from('subscriptions')
-          .select('user_id')
-          .eq('user_id', uid)
-          .maybeSingle();
+        // 2. subscriptions — INSERT 시도, 중복이면 무시
+        var r2 = await window.supabase.from('subscriptions').insert({
+          user_id:    uid,
+          plan:       'free',
+          status:     'active',
+          started_at: new Date().toISOString()
+        });
+        if (r2.error && r2.error.code !== '23505') throw r2.error;
 
-        if (!checkSub.data) {
-          var r2 = await window.supabase.from('subscriptions').insert({
-            user_id:    uid,
-            plan:       'free',
-            status:     'active',
-            started_at: new Date().toISOString()
-          });
-          if (r2.error) throw r2.error;
-        }
-
-        // 3. investment_commandments — 없을 때만 기본 3개 생성
-        var checkCmd = await window.supabase
-          .from('investment_commandments')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', uid);
-
-        if (!checkCmd.count || checkCmd.count === 0) {
-          var r3 = await window.supabase.from('investment_commandments').insert([
-            { user_id: uid, content: '손절가를 미리 정하고 지킨다',   display_order: 1 },
-            { user_id: uid, content: '분산 투자, 한 종목 20% 이하',   display_order: 2 },
-            { user_id: uid, content: '감정적 매매를 하지 않는다',     display_order: 3 }
-          ]);
-          if (r3.error) throw r3.error;
-        }
+        // 3. investment_commandments — INSERT 시도, 중복이면 무시
+        var r3 = await window.supabase.from('investment_commandments').insert([
+          { user_id: uid, content: '손절가를 미리 정하고 지킨다',   display_order: 1 },
+          { user_id: uid, content: '분산 투자, 한 종목 20% 이하',   display_order: 2 },
+          { user_id: uid, content: '감정적 매매를 하지 않는다',     display_order: 3 }
+        ]);
+        if (r3.error && r3.error.code !== '23505') throw r3.error;
 
         showScreen('screen-main');
         switchTab('home');
