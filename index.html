@@ -1578,13 +1578,13 @@
 
       var res = await window.supabase
         .from('accounts')
-        .select('id, broker_name, account_nickname, created_at')
+        .select('id, broker_name, account_alias, created_at')
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: true });
 
       document.getElementById('accounts-loading').style.display = 'none';
 
-      if (res.error) { showToast('오류: ' + res.error.message, true); return; }
+      if (res.error) { showToast('계좌를 불러오지 못했어요.', true); return; }
 
       var list = res.data || [];
       if (list.length === 0) {
@@ -1596,8 +1596,8 @@
       list.forEach(function(acct) {
         var card = document.createElement('div');
         card.className = 'account-card';
-        var displayName = acct.account_nickname || acct.broker_name;
-        var subLabel    = acct.account_nickname ? acct.broker_name : '';
+        var displayName = acct.account_alias || acct.broker_name;
+        var subLabel    = acct.account_alias ? acct.broker_name : '';
         card.innerHTML =
           '<div class="account-card-info">' +
             (subLabel ? '<div class="account-card-broker">' + subLabel + '</div>' : '') +
@@ -1654,7 +1654,7 @@
       acctFormMode = 'edit'; acctEditId = acct.id;
       selectedBroker = BROKERS.indexOf(acct.broker_name) !== -1 ? acct.broker_name : '기타';
       document.getElementById('form-title').textContent = '계좌 수정';
-      document.getElementById('input-account-name').value = acct.account_nickname || '';
+      document.getElementById('input-account-name').value = acct.account_alias || '';
       var isCustom = selectedBroker === '기타';
       document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
       document.getElementById('input-custom-broker').value = isCustom ? acct.broker_name : '';
@@ -1665,8 +1665,8 @@
 
     function openActionsModal(acct) {
       acctActionTarget = acct;
-      var name = acct.account_nickname
-        ? acct.account_nickname + ' (' + acct.broker_name + ')'
+      var name = acct.account_alias
+        ? acct.account_alias + ' (' + acct.broker_name + ')'
         : acct.broker_name;
       document.getElementById('actions-title').textContent = name;
       document.getElementById('modal-account-actions').classList.add('open');
@@ -1674,8 +1674,8 @@
 
     function openDeleteModal(acct) {
       acctEditId = acct.id;
-      var name = acct.account_nickname
-        ? '"' + acct.account_nickname + '" (' + acct.broker_name + ')'
+      var name = acct.account_alias
+        ? '"' + acct.account_alias + '" (' + acct.broker_name + ')'
         : '"' + acct.broker_name + '"';
       document.getElementById('delete-desc').innerHTML =
         name + ' 계좌를 삭제하시겠어요?<br>삭제하면 되돌릴 수 없어요.';
@@ -1698,13 +1698,13 @@
       try {
         if (acctFormMode === 'add') {
           var r = await window.supabase.from('accounts').insert({
-            user_id: currentUser.id, broker_name: brokerName, account_nickname: nickname
+            user_id: currentUser.id, broker_name: brokerName, account_alias: nickname
           });
           if (r.error) throw r.error;
           showToast('계좌가 추가됐어요! 🎉');
         } else {
           var r2 = await window.supabase.from('accounts').update({
-            broker_name: brokerName, account_nickname: nickname
+            broker_name: brokerName, account_alias: nickname
           }).eq('id', acctEditId);
           if (r2.error) throw r2.error;
           showToast('계좌가 수정됐어요.');
