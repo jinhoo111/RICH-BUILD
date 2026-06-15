@@ -840,6 +840,31 @@
     .action-btn:hover { background: var(--color-gray-100); }
 
     .del-desc { font-size: var(--font-size-body-sm); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
+
+    .currency-toggle {
+      display: flex; gap: var(--space-2); margin-bottom: var(--space-5);
+    }
+    .currency-btn {
+      flex: 1; height: 44px;
+      border: 1.5px solid var(--color-border-default);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-primary);
+      font-family: var(--font-body); font-size: var(--font-size-body-sm); font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      cursor: pointer; transition: border-color 150ms, background-color 150ms, color 150ms;
+    }
+    .currency-btn.on {
+      border-color: var(--color-primary-500); background: var(--color-primary-50);
+      color: var(--color-primary-700); font-weight: var(--font-weight-bold);
+    }
+
+    .account-card-badge {
+      font-size: 10px; font-weight: var(--font-weight-medium);
+      padding: 2px 6px; border-radius: var(--radius-full);
+      background: var(--color-bg-secondary); color: var(--color-text-tertiary);
+      margin-top: 2px; display: inline-block;
+    }
+    .account-card-badge.usd { background: var(--color-accent-50); color: var(--color-accent-600); }
   </style>
 </head>
 <body>
@@ -1064,6 +1089,11 @@
         <div class="modal-hd">
           <div class="modal-ttl" id="form-title">계좌 추가</div>
           <button class="modal-x" id="btn-form-close">✕</button>
+        </div>
+        <div class="form-label">통화</div>
+        <div class="currency-toggle">
+          <button type="button" class="currency-btn on" id="btn-currency-krw">🇰🇷 원화 (KRW)</button>
+          <button type="button" class="currency-btn" id="btn-currency-usd">🇺🇸 달러 (USD)</button>
         </div>
         <div class="form-label">증권사</div>
         <div class="broker-grid" id="broker-grid"></div>
@@ -1561,6 +1591,7 @@
     var acctEditId       = null;
     var acctActionTarget = null;
     var selectedBroker   = '';
+    var selectedCurrency = 'KRW';
 
     function showHomeSections() {
       var isUser = !!currentUser;
@@ -1598,10 +1629,12 @@
         card.className = 'account-card';
         var displayName = acct.account_alias || acct.broker_name;
         var subLabel    = acct.account_alias ? acct.broker_name : '';
+        var isUsd       = acct.currency === 'USD';
         card.innerHTML =
           '<div class="account-card-info">' +
             (subLabel ? '<div class="account-card-broker">' + subLabel + '</div>' : '') +
             '<div class="account-card-name">' + displayName + '</div>' +
+            '<span class="account-card-badge' + (isUsd ? ' usd' : '') + '">' + (isUsd ? '🇺🇸 USD' : '🇰🇷 KRW') + '</span>' +
           '</div>' +
           '<button class="account-more-btn" aria-label="계좌 옵션">⋮</button>';
         card.querySelector('.account-more-btn').addEventListener('click', function(e) {
@@ -1639,12 +1672,19 @@
       document.getElementById('btn-form-save').disabled = !ok;
     }
 
+    function setCurrency(cur) {
+      selectedCurrency = cur;
+      document.getElementById('btn-currency-krw').classList.toggle('on', cur === 'KRW');
+      document.getElementById('btn-currency-usd').classList.toggle('on', cur === 'USD');
+    }
+
     function openAddModal() {
       acctFormMode = 'add'; acctEditId = null; selectedBroker = '';
       document.getElementById('form-title').textContent = '계좌 추가';
       document.getElementById('input-account-name').value = '';
       document.getElementById('input-custom-broker').value = '';
       document.getElementById('custom-broker-wrap').style.display = 'none';
+      setCurrency('KRW');
       renderBrokerGrid();
       updateFormSaveBtn();
       document.getElementById('modal-account-form').classList.add('open');
@@ -1658,6 +1698,7 @@
       var isCustom = selectedBroker === '기타';
       document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
       document.getElementById('input-custom-broker').value = isCustom ? acct.broker_name : '';
+      setCurrency(acct.currency || 'KRW');
       renderBrokerGrid();
       updateFormSaveBtn();
       document.getElementById('modal-account-form').classList.add('open');
@@ -1698,13 +1739,19 @@
       try {
         if (acctFormMode === 'add') {
           var r = await window.supabase.from('accounts').insert({
-            user_id: currentUser.id, broker_name: brokerName, account_alias: nickname
+            user_id: currentUser.id,
+            broker_name: brokerName,
+            account_alias: nickname,
+            account_type: 'real',
+            currency: selectedCurrency
           });
           if (r.error) throw r.error;
           showToast('계좌가 추가됐어요! 🎉');
         } else {
           var r2 = await window.supabase.from('accounts').update({
-            broker_name: brokerName, account_alias: nickname
+            broker_name: brokerName,
+            account_alias: nickname,
+            currency: selectedCurrency
           }).eq('id', acctEditId);
           if (r2.error) throw r2.error;
           showToast('계좌가 수정됐어요.');
@@ -1738,6 +1785,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('fab-add').addEventListener('click', openAddModal);
 
+      document.getElementById('btn-currency-krw').addEventListener('click', function() { setCurrency('KRW'); });
+      document.getElementById('btn-currency-usd').addEventListener('click', function() { setCurrency('USD'); });
       document.getElementById('btn-form-close').addEventListener('click', closeFormModal);
       document.getElementById('btn-form-save').addEventListener('click', saveAccount);
       document.getElementById('input-account-name').addEventListener('input', updateFormSaveBtn);
