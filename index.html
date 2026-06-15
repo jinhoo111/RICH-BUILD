@@ -1584,7 +1584,7 @@
 
       document.getElementById('accounts-loading').style.display = 'none';
 
-      if (res.error) { showToast('계좌를 불러오지 못했어요.', true); return; }
+      if (res.error) { showToast('오류: ' + res.error.message, true); return; }
 
       var list = res.data || [];
       if (list.length === 0) {
