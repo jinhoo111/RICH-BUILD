@@ -1090,12 +1090,15 @@
           <div class="modal-ttl" id="form-title">계좌 추가</div>
           <button class="modal-x" id="btn-form-close">✕</button>
         </div>
-        <div class="form-label">통화</div>
-        <div class="currency-toggle">
+        <div id="edit-mode-notice" style="display:none; background:var(--color-surface-secondary,#f5f5f5); border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--color-text-secondary,#888); line-height:1.6;">
+          증권사와 통화는 수정할 수 없어요.<br>변경이 필요하면 삭제 후 재등록해 주세요.
+        </div>
+        <div class="form-label" id="currency-label">통화</div>
+        <div class="currency-toggle" id="currency-section">
           <button type="button" class="currency-btn on" id="btn-currency-krw">🇰🇷 원화 (KRW)</button>
           <button type="button" class="currency-btn" id="btn-currency-usd">🇺🇸 달러 (USD)</button>
         </div>
-        <div class="form-label">증권사</div>
+        <div class="form-label" id="broker-label">증권사</div>
         <div class="broker-grid" id="broker-grid"></div>
         <div id="custom-broker-wrap" class="input-wrap" style="display:none; margin-bottom:var(--space-4);">
           <label class="input-label" for="input-custom-broker">증권사명 직접 입력</label>
@@ -1134,7 +1137,7 @@
           <div class="modal-ttl">계좌 삭제</div>
           <button class="modal-x" id="btn-delete-close">✕</button>
         </div>
-        <div class="del-desc" id="delete-desc">이 계좌를 삭제하시겠어요?<br>삭제하면 되돌릴 수 없어요.</div>
+        <div class="del-desc" id="delete-desc">계좌를 삭제하면<br>연결된 종목도 모두 삭제됩니다.<br>계속할까요?</div>
         <div class="modal-gap">
           <button class="btn-danger" id="btn-confirm-delete">삭제하기</button>
           <button class="btn-ghost" id="btn-cancel-delete">취소</button>
@@ -1581,10 +1584,10 @@
        PHASE 3-1: 계좌 CRUD
        ============================================================ */
     var BROKERS = [
-      '키움증권', '미래에셋', '삼성증권',
-      'NH투자', '한국투자', 'KB증권',
-      '신한투자', '대신증권', '토스증권',
-      '카카오페이', '유안타증권', '기타'
+      '토스증권', '카카오페이증권', '키움증권', '미래에셋',
+      '삼성증권', 'NH투자증권', 'KB증권', '신한투자증권',
+      '한화투자증권', '대신증권', '하나증권', '유안타증권',
+      '한국투자증권', '기타'
     ];
 
     var acctFormMode     = 'add';
@@ -1609,7 +1612,7 @@
 
       var res = await window.supabase
         .from('accounts')
-        .select('id, broker_name, account_alias, created_at')
+        .select('id, broker_name, account_alias, currency, created_at')
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: true });
 
@@ -1636,7 +1639,7 @@
             '<div class="account-card-name">' + displayName + '</div>' +
             '<span class="account-card-badge' + (isUsd ? ' usd' : '') + '">' + (isUsd ? '🇺🇸 USD' : '🇰🇷 KRW') + '</span>' +
           '</div>' +
-          '<button class="account-more-btn" aria-label="계좌 옵션">⋮</button>';
+          '<button class="account-more-btn" aria-label="계좌 옵션">✏️</button>';
         card.querySelector('.account-more-btn').addEventListener('click', function(e) {
           e.stopPropagation();
           openActionsModal(acct);
@@ -1684,6 +1687,11 @@
       document.getElementById('input-account-name').value = '';
       document.getElementById('input-custom-broker').value = '';
       document.getElementById('custom-broker-wrap').style.display = 'none';
+      document.getElementById('edit-mode-notice').style.display = 'none';
+      document.getElementById('currency-label').style.display = '';
+      document.getElementById('currency-section').style.display = '';
+      document.getElementById('broker-label').style.display = '';
+      document.getElementById('broker-grid').style.display = '';
       setCurrency('KRW');
       renderBrokerGrid();
       updateFormSaveBtn();
@@ -1695,12 +1703,13 @@
       selectedBroker = BROKERS.indexOf(acct.broker_name) !== -1 ? acct.broker_name : '기타';
       document.getElementById('form-title').textContent = '계좌 수정';
       document.getElementById('input-account-name').value = acct.account_alias || '';
-      var isCustom = selectedBroker === '기타';
-      document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
-      document.getElementById('input-custom-broker').value = isCustom ? acct.broker_name : '';
-      setCurrency(acct.currency || 'KRW');
-      renderBrokerGrid();
-      updateFormSaveBtn();
+      document.getElementById('custom-broker-wrap').style.display = 'none';
+      document.getElementById('edit-mode-notice').style.display = 'block';
+      document.getElementById('currency-label').style.display = 'none';
+      document.getElementById('currency-section').style.display = 'none';
+      document.getElementById('broker-label').style.display = 'none';
+      document.getElementById('broker-grid').style.display = 'none';
+      document.getElementById('btn-form-save').disabled = false;
       document.getElementById('modal-account-form').classList.add('open');
     }
 
@@ -1719,7 +1728,7 @@
         ? '"' + acct.account_alias + '" (' + acct.broker_name + ')'
         : '"' + acct.broker_name + '"';
       document.getElementById('delete-desc').innerHTML =
-        name + ' 계좌를 삭제하시겠어요?<br>삭제하면 되돌릴 수 없어요.';
+        name + ' 계좌를 삭제하면<br>연결된 종목도 모두 삭제됩니다.<br>계속할까요?';
       document.getElementById('modal-account-delete').classList.add('open');
     }
 
@@ -1744,11 +1753,24 @@
             .eq('user_id', currentUser.id);
           var nextOrder = (countRes.count || 0) + 1;
 
+          var dupRes = await window.supabase
+            .from('accounts')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', currentUser.id)
+            .eq('broker_name', brokerName)
+            .eq('currency', selectedCurrency);
+          if ((dupRes.count || 0) > 0) {
+            if (!confirm('이미 같은 계좌가 있어요. 그래도 추가할까요?')) {
+              btn.disabled = false; btn.textContent = '저장';
+              return;
+            }
+          }
+
           var r = await window.supabase.from('accounts').insert({
             user_id:       currentUser.id,
             broker_name:   brokerName,
             account_alias: nickname,
-            account_type:  'real',
+            account_type:  selectedCurrency === 'USD' ? 'foreign' : 'domestic',
             currency:      selectedCurrency,
             cash_balance:  0,
             is_verified:   false,
@@ -1758,9 +1780,7 @@
           showToast('계좌가 추가됐어요! 🎉');
         } else {
           var r2 = await window.supabase.from('accounts').update({
-            broker_name: brokerName,
-            account_alias: nickname,
-            currency: selectedCurrency
+            account_alias: nickname
           }).eq('id', acctEditId);
           if (r2.error) throw r2.error;
           showToast('계좌가 수정됐어요.');
