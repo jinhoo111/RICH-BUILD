@@ -199,7 +199,7 @@ PHASE 23  React Native 앱 전환 + Play Store
     ✅ 2-2. 인증 + 온보딩 전체 구현 (index.html)
 
   ⏳ PHASE 3  다중 계좌 관리 (킬러 기능)   ← 지금 여기
-    □ 3-1. 계좌 CRUD
+    ✅ 3-1. 계좌 CRUD
     □ 3-2. 종목 CRUD + 수익률 계산
     □ 3-3. 국내 주가 연동 + 티커 자동완성
     □ 3-4. 미국 주가 연동 (Finnhub)
