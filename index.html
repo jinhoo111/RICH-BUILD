@@ -1350,18 +1350,6 @@
           </div>
           <!-- ③ 종목 리스트 -->
           <div id="holdings-list"></div>
-          <!-- ④ 내 계좌 관리 -->
-          <div class="accounts-mgmt-hd">
-            <span class="home-section-label">내 계좌</span>
-            <button class="btn-add-acct" id="btn-open-add-account">＋ 계좌 추가</button>
-          </div>
-          <div id="accounts-loading" style="text-align:center;padding:16px 0;color:var(--color-text-tertiary);font-size:14px;">불러오는 중...</div>
-          <div id="accounts-empty" class="empty-state" style="display:none;padding:24px var(--space-6);">
-            <div class="empty-icon">🏦</div>
-            <div class="empty-title">아직 계좌가 없어요</div>
-            <div class="empty-desc">위 버튼을 눌러<br>첫 번째 계좌를 추가해보세요.</div>
-          </div>
-          <div id="accounts-list" style="margin-bottom:var(--space-8);"></div>
         </div>
       </div>
       <div class="tab-page" data-page="news">
@@ -1403,63 +1391,6 @@
       <span id="fab-label">＋</span>
     </button>
 
-    <!-- 계좌 추가/수정 모달 -->
-    <div id="modal-account-form" class="modal-overlay">
-      <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-hd">
-          <div class="modal-ttl" id="form-title">계좌 추가</div>
-          <button class="modal-x" id="btn-form-close">✕</button>
-        </div>
-        <div id="edit-mode-notice" style="display:none; background:var(--color-surface-secondary,#f5f5f5); border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--color-text-secondary,#888); line-height:1.6;">
-          증권사명은 수정할 수 없어요.<br>변경이 필요하면 삭제 후 재등록해 주세요.
-        </div>
-        <div class="form-label" id="broker-label">증권사</div>
-        <div class="broker-grid" id="broker-grid"></div>
-        <div id="custom-broker-wrap" class="input-wrap" style="display:none; margin-bottom:var(--space-4);">
-          <label class="input-label" for="input-custom-broker">증권사명 직접 입력</label>
-          <input type="text" id="input-custom-broker" class="input-field" maxlength="20" placeholder="증권사명을 입력하세요" autocomplete="off">
-        </div>
-        <div class="input-wrap">
-          <label class="input-label" for="input-account-name">계좌 별칭 (선택, 최대 20자)</label>
-          <input type="text" id="input-account-name" class="input-field" maxlength="20" placeholder="예: 주계좌, 적립식" autocomplete="off">
-        </div>
-        <div class="modal-gap">
-          <button class="btn-primary" id="btn-form-save" disabled>저장</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 계좌 옵션 액션시트 (수정/삭제 선택) -->
-    <div id="modal-account-actions" class="modal-overlay">
-      <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-hd">
-          <div class="modal-ttl" id="actions-title">계좌 설정</div>
-          <button class="modal-x" id="btn-actions-close">✕</button>
-        </div>
-        <div class="modal-gap">
-          <button class="action-btn" id="btn-action-edit">✏️ &nbsp;수정하기</button>
-          <button class="btn-danger" id="btn-action-delete">삭제하기</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 계좌 삭제 확인 모달 -->
-    <div id="modal-account-delete" class="modal-overlay">
-      <div class="modal-sheet">
-        <div class="modal-handle"></div>
-        <div class="modal-hd">
-          <div class="modal-ttl">계좌 삭제</div>
-          <button class="modal-x" id="btn-delete-close">✕</button>
-        </div>
-        <div class="del-desc" id="delete-desc">계좌를 삭제하면<br>연결된 종목도 모두 삭제됩니다.<br>계속할까요?</div>
-        <div class="modal-gap">
-          <button class="btn-danger" id="btn-confirm-delete">삭제하기</button>
-          <button class="btn-ghost" id="btn-cancel-delete">취소</button>
-        </div>
-      </div>
-    </div>
 
     <!-- ============================================================
          PHASE 3-2: 종목 추가/수정 폼 (공통 화면)
@@ -1473,14 +1404,17 @@
         <div class="holding-screen-body">
           <!-- 수정 모드 안내 -->
           <div id="holding-edit-notice" class="holding-form-notice" style="display:none;">
-            티커·시장·계좌는 변경할 수 없어요.<br>변경이 필요하면 삭제 후 재등록해 주세요.
+            티커·시장·증권사는 변경할 수 없어요.<br>변경이 필요하면 삭제 후 재등록해 주세요.
           </div>
-          <!-- 계좌 선택 -->
+          <!-- 증권사 선택 -->
           <div class="input-wrap">
-            <label class="input-label" for="holding-acct-select">계좌 선택 *</label>
-            <select id="holding-acct-select" class="input-field" style="cursor:pointer;">
-              <option value="">계좌를 선택하세요</option>
-            </select>
+            <label class="input-label">증권사 *</label>
+            <div class="broker-grid" id="holding-broker-grid"></div>
+            <div id="holding-custom-broker-wrap" style="display:none; margin-top:8px;">
+              <input type="text" id="holding-custom-broker" class="input-field" maxlength="20"
+                placeholder="증권사명 직접 입력" autocomplete="off">
+            </div>
+            <div id="holding-broker-display" style="display:none; padding:10px 12px; background:var(--color-bg-secondary,#f5f5f5); border-radius:8px; font-size:14px; color:var(--color-text-secondary);"></div>
           </div>
           <!-- 종목명 -->
           <div class="input-wrap">
@@ -2019,18 +1953,15 @@
     /* ============================================================
        PHASE 3-1: 계좌 CRUD
        ============================================================ */
+    /* ============================================================
+       PHASE 3-1 → 증권사 상수 + 홈 섹션 (계좌 UI 제거됨)
+       ============================================================ */
     var BROKERS = [
       '토스증권', '카카오페이증권', '키움증권', '미래에셋',
       '삼성증권', 'NH투자증권', 'KB증권', '신한투자증권',
       '한화투자증권', '대신증권', '하나증권', '유안타증권',
       '한국투자증권', '기타'
     ];
-
-    var acctFormMode     = 'add';
-    var acctEditId       = null;
-    var acctActionTarget = null;
-    var selectedBroker   = '';
-    var selectedCurrency = 'KRW';
 
     function showHomeSections() {
       var isUser = !!currentUser;
@@ -2040,232 +1971,8 @@
       if (isUser) loadAndRenderHome();
     }
 
-    async function loadAccounts() {
-      if (!currentUser) return;
-      document.getElementById('accounts-loading').style.display = 'block';
-      document.getElementById('accounts-empty').style.display   = 'none';
-      document.getElementById('accounts-list').innerHTML = '';
-
-      var res = await window.supabase
-        .from('accounts')
-        .select('id, broker_name, account_alias, currency, created_at')
-        .eq('user_id', currentUser.id)
-        .order('created_at', { ascending: true });
-
-      document.getElementById('accounts-loading').style.display = 'none';
-
-      if (res.error) { showToast('계좌를 불러오지 못했어요.', true); return; }
-
-      var list = res.data || [];
-      if (list.length === 0) {
-        document.getElementById('accounts-empty').style.display = 'flex';
-        return;
-      }
-
-      var container = document.getElementById('accounts-list');
-      list.forEach(function(acct) {
-        var card = document.createElement('div');
-        card.className = 'account-card';
-        var displayName = acct.account_alias || acct.broker_name;
-        var subLabel    = acct.account_alias ? acct.broker_name : '';
-        card.innerHTML =
-          '<div class="account-card-info">' +
-            (subLabel ? '<div class="account-card-broker">' + subLabel + '</div>' : '') +
-            '<div class="account-card-name">' + displayName + '</div>' +
-          '</div>' +
-          '<button class="account-more-btn" aria-label="계좌 옵션">✏️</button>';
-        card.querySelector('.account-more-btn').addEventListener('click', function(e) {
-          e.stopPropagation();
-          openActionsModal(acct);
-        });
-        container.appendChild(card);
-      });
-    }
-
-    function renderBrokerGrid() {
-      var grid = document.getElementById('broker-grid');
-      grid.innerHTML = '';
-      BROKERS.forEach(function(b) {
-        var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'broker-chip' + (selectedBroker === b ? ' on' : '');
-        btn.textContent = b;
-        btn.addEventListener('click', function() {
-          selectedBroker = b;
-          grid.querySelectorAll('.broker-chip').forEach(function(c) { c.classList.remove('on'); });
-          btn.classList.add('on');
-          var isCustom = (b === '기타');
-          document.getElementById('custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
-          if (isCustom) document.getElementById('input-custom-broker').focus();
-          updateFormSaveBtn();
-        });
-        grid.appendChild(btn);
-      });
-    }
-
-    function updateFormSaveBtn() {
-      var customOk = document.getElementById('input-custom-broker').value.trim() !== '';
-      var ok = selectedBroker && (selectedBroker !== '기타' || customOk);
-      document.getElementById('btn-form-save').disabled = !ok;
-    }
-
-    function setCurrency(cur) {
-      selectedCurrency = cur;
-      document.getElementById('btn-currency-krw').classList.toggle('on', cur === 'KRW');
-      document.getElementById('btn-currency-usd').classList.toggle('on', cur === 'USD');
-    }
-
-    function openAddModal() {
-      acctFormMode = 'add'; acctEditId = null; selectedBroker = '';
-      document.getElementById('form-title').textContent = '계좌 추가';
-      document.getElementById('input-account-name').value = '';
-      document.getElementById('input-custom-broker').value = '';
-      document.getElementById('custom-broker-wrap').style.display = 'none';
-      document.getElementById('edit-mode-notice').style.display = 'none';
-      document.getElementById('broker-label').style.display = '';
-      document.getElementById('broker-grid').style.display = '';
-      renderBrokerGrid();
-      updateFormSaveBtn();
-      document.getElementById('modal-account-form').classList.add('open');
-    }
-
-    function openEditModal(acct) {
-      acctFormMode = 'edit'; acctEditId = acct.id;
-      selectedBroker = BROKERS.indexOf(acct.broker_name) !== -1 ? acct.broker_name : '기타';
-      document.getElementById('form-title').textContent = '계좌 수정';
-      document.getElementById('input-account-name').value = acct.account_alias || '';
-      document.getElementById('custom-broker-wrap').style.display = 'none';
-      document.getElementById('edit-mode-notice').style.display = 'block';
-      document.getElementById('broker-label').style.display = 'none';
-      document.getElementById('broker-grid').style.display = 'none';
-      document.getElementById('btn-form-save').disabled = false;
-      document.getElementById('modal-account-form').classList.add('open');
-    }
-
-    function openActionsModal(acct) {
-      acctActionTarget = acct;
-      var name = acct.account_alias
-        ? acct.account_alias + ' (' + acct.broker_name + ')'
-        : acct.broker_name;
-      document.getElementById('actions-title').textContent = name;
-      document.getElementById('modal-account-actions').classList.add('open');
-    }
-
-    function openDeleteModal(acct) {
-      acctEditId = acct.id;
-      var name = acct.account_alias
-        ? '"' + acct.account_alias + '" (' + acct.broker_name + ')'
-        : '"' + acct.broker_name + '"';
-      document.getElementById('delete-desc').innerHTML =
-        name + ' 계좌를 삭제하면<br>연결된 종목도 모두 삭제됩니다.<br>계속할까요?';
-      document.getElementById('modal-account-delete').classList.add('open');
-    }
-
-    function closeFormModal()    { document.getElementById('modal-account-form').classList.remove('open'); }
-    function closeActionsModal() { document.getElementById('modal-account-actions').classList.remove('open'); acctActionTarget = null; }
-    function closeDeleteModal()  { document.getElementById('modal-account-delete').classList.remove('open'); acctEditId = null; }
-
-    async function saveAccount() {
-      var brokerName = selectedBroker === '기타'
-        ? document.getElementById('input-custom-broker').value.trim()
-        : selectedBroker;
-      var nickname = document.getElementById('input-account-name').value.trim();
-      if (!brokerName) { showToast('증권사를 선택해주세요.', true); return; }
-
-      var btn = document.getElementById('btn-form-save');
-      btn.disabled = true; btn.textContent = '저장 중...';
-      try {
-        if (acctFormMode === 'add') {
-          var countRes = await window.supabase
-            .from('accounts')
-            .select('id', { count: 'exact', head: true })
-            .eq('user_id', currentUser.id);
-          var nextOrder = (countRes.count || 0) + 1;
-
-          var dupRes = await window.supabase
-            .from('accounts')
-            .select('id', { count: 'exact', head: true })
-            .eq('user_id', currentUser.id)
-            .eq('broker_name', brokerName);
-          if ((dupRes.count || 0) > 0) {
-            if (!confirm('이미 같은 증권사 계좌가 있어요. 그래도 추가할까요?')) {
-              btn.disabled = false; btn.textContent = '저장';
-              return;
-            }
-          }
-
-          var r = await window.supabase.from('accounts').insert({
-            user_id:       currentUser.id,
-            broker_name:   brokerName,
-            account_alias: nickname,
-            cash_balance:  0,
-            is_verified:   false,
-            display_order: nextOrder
-          });
-          if (r.error) throw r.error;
-          showToast('계좌가 추가됐어요! 🎉');
-        } else {
-          var r2 = await window.supabase.from('accounts').update({
-            account_alias: nickname
-          }).eq('id', acctEditId);
-          if (r2.error) throw r2.error;
-          showToast('계좌가 수정됐어요.');
-        }
-        closeFormModal();
-        await loadAccounts();
-      } catch (e) {
-        showToast('저장 실패: ' + (e.message || ''), true);
-      } finally {
-        btn.disabled = false; btn.textContent = '저장';
-      }
-    }
-
-    async function deleteAccount() {
-      if (!acctEditId) return;
-      var btn = document.getElementById('btn-confirm-delete');
-      btn.disabled = true; btn.textContent = '삭제 중...';
-      try {
-        var r = await window.supabase.from('accounts').delete().eq('id', acctEditId);
-        if (r.error) throw r.error;
-        showToast('계좌가 삭제됐어요.');
-        closeDeleteModal();
-        await loadAccounts();
-      } catch (e) {
-        showToast('삭제 실패: ' + (e.message || ''), true);
-      } finally {
-        btn.disabled = false; btn.textContent = '삭제하기';
-      }
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('fab-add').addEventListener('click', openHoldingAdd); // PHASE 3-2: 종목 추가로 변경
-      document.getElementById('btn-open-add-account').addEventListener('click', openAddModal); // 계좌 추가는 내 계좌 섹션 버튼으로
-
-      document.getElementById('btn-form-close').addEventListener('click', closeFormModal);
-      document.getElementById('btn-form-save').addEventListener('click', saveAccount);
-      document.getElementById('input-account-name').addEventListener('input', updateFormSaveBtn);
-      document.getElementById('input-custom-broker').addEventListener('input', updateFormSaveBtn);
-      document.getElementById('modal-account-form').addEventListener('click', function(e) {
-        if (e.target === this) closeFormModal();
-      });
-
-      document.getElementById('btn-actions-close').addEventListener('click', closeActionsModal);
-      document.getElementById('btn-action-edit').addEventListener('click', function() {
-        var t = acctActionTarget; closeActionsModal(); if (t) openEditModal(t);
-      });
-      document.getElementById('btn-action-delete').addEventListener('click', function() {
-        var t = acctActionTarget; closeActionsModal(); if (t) openDeleteModal(t);
-      });
-      document.getElementById('modal-account-actions').addEventListener('click', function(e) {
-        if (e.target === this) closeActionsModal();
-      });
-
-      document.getElementById('btn-delete-close').addEventListener('click', closeDeleteModal);
-      document.getElementById('btn-confirm-delete').addEventListener('click', deleteAccount);
-      document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
-      document.getElementById('modal-account-delete').addEventListener('click', function(e) {
-        if (e.target === this) closeDeleteModal();
-      });
+      document.getElementById('fab-add').addEventListener('click', openHoldingAdd);
 
       var homeTabPage = document.querySelector('.tab-page[data-page="home"]');
       if (homeTabPage) {
@@ -2281,11 +1988,11 @@
     /* ============================================================
        PHASE 3-2: 종목 CRUD
        ============================================================ */
-    var currentAccountFilter = 'all';
+    var currentBrokerFilter  = 'all'; // 'all' | 증권사명
     var holdingFormMode      = 'add'; // 'add' | 'edit'
     var editingHoldingId     = null;
     var currentUserMeta      = null;  // {persona_mode, org_name, nickname_display}
-    var cachedAccounts       = [];
+    var selectedHoldingBroker = '';   // 종목 폼에서 선택한 증권사
     var selectedMarket       = 'KR';
     var selectedTradeType    = 'long';
     var selectedStatus       = 'holding';
@@ -2353,49 +2060,45 @@
         pt.portfolioSummaryLabel + ' · ' + (holdingCount || 0) + '개 종목 (매수금액 기준)';
     }
 
-    /* 계좌 탭 렌더링 */
-    function renderAcctTabs() {
+    /* 증권사 탭 렌더링 (보유 종목 기반) */
+    function renderBrokerTabs(allHoldings) {
       var wrap = document.getElementById('acct-tabs');
       if (!wrap) return;
       wrap.innerHTML = '';
 
+      // 보유 종목에서 증권사명 추출 (중복 제거)
+      var brokerSet = {};
+      (allHoldings || []).forEach(function(h) {
+        if (h.accounts && h.accounts.broker_name) {
+          brokerSet[h.accounts.broker_name] = true;
+        }
+      });
+      var brokerNames = Object.keys(brokerSet);
+
       var allBtn = document.createElement('button');
-      allBtn.className = 'acct-tab' + (currentAccountFilter === 'all' ? ' active' : '');
+      allBtn.className = 'acct-tab' + (currentBrokerFilter === 'all' ? ' active' : '');
       allBtn.textContent = '전체';
       allBtn.addEventListener('click', function() {
-        currentAccountFilter = 'all';
-        renderAcctTabs();
+        currentBrokerFilter = 'all';
         loadHoldings();
       });
       wrap.appendChild(allBtn);
 
-      cachedAccounts.forEach(function(acct) {
+      brokerNames.forEach(function(name) {
         var btn = document.createElement('button');
-        btn.className = 'acct-tab' + (currentAccountFilter === acct.id ? ' active' : '');
-        btn.textContent = acct.account_alias || acct.broker_name;
+        btn.className = 'acct-tab' + (currentBrokerFilter === name ? ' active' : '');
+        btn.textContent = name;
         btn.addEventListener('click', function() {
-          currentAccountFilter = acct.id;
-          renderAcctTabs();
+          currentBrokerFilter = name;
           loadHoldings();
         });
         wrap.appendChild(btn);
       });
     }
 
-    /* 홈 전체 로드 (계좌 + 종목 통합) */
+    /* 홈 전체 로드 */
     async function loadAndRenderHome() {
       await loadUserMeta();
-      // 계좌 목록 로드 (탭 + 계좌 리스트 공용)
-      var res = await window.supabase
-        .from('accounts')
-        .select('id, broker_name, account_alias, currency')
-        .eq('user_id', currentUser.id)
-        .order('created_at', { ascending: true });
-      cachedAccounts = res.data || [];
-      renderAcctTabs();
-      // 계좌 카드 리스트 (기존 PHASE 3-1 함수)
-      await loadAccounts();
-      // 종목 로드
       await loadHoldings();
     }
 
@@ -2406,17 +2109,13 @@
       document.getElementById('holdings-empty').style.display   = 'none';
       document.getElementById('holdings-list').innerHTML        = '';
 
-      var query = window.supabase
+      // accounts 조인으로 broker_name 포함
+      var res = await window.supabase
         .from('holdings')
-        .select('id, account_id, ticker, name, market, quantity, avg_price, currency, trade_type, status, created_at')
+        .select('id, account_id, ticker, name, market, quantity, avg_price, currency, trade_type, status, created_at, accounts(broker_name)')
         .eq('user_id', currentUser.id)
         .order('created_at', { ascending: false });
 
-      if (currentAccountFilter !== 'all') {
-        query = query.eq('account_id', currentAccountFilter);
-      }
-
-      var res = await query;
       document.getElementById('holdings-loading').style.display = 'none';
 
       if (res.error) {
@@ -2425,7 +2124,18 @@
       }
 
       var all = res.data || [];
-      var visible = all.filter(function(h) { return h.status !== 'hidden'; });
+
+      // 증권사 탭 렌더링 (전체 데이터 기반)
+      renderBrokerTabs(all);
+
+      // 증권사 필터 적용
+      var filtered = currentBrokerFilter === 'all'
+        ? all
+        : all.filter(function(h) {
+            return h.accounts && h.accounts.broker_name === currentBrokerFilter;
+          });
+
+      var visible = filtered.filter(function(h) { return h.status !== 'hidden'; });
       var krwTotal = visible.reduce(function(sum, h) {
         if (h.currency === 'USD') return sum;
         return sum + ((parseFloat(h.quantity) || 0) * (parseFloat(h.avg_price) || 0));
@@ -2436,12 +2146,12 @@
       }, 0);
       renderSummaryCard(krwTotal, usdTotal, visible.length);
 
-      if (all.length === 0) {
+      if (filtered.length === 0) {
         updateHoldingEmptyText();
         document.getElementById('holdings-empty').style.display = 'flex';
         return;
       }
-      renderHoldingsList(all);
+      renderHoldingsList(filtered);
     }
 
     /* 종목 리스트 렌더링 */
@@ -2481,27 +2191,59 @@
       });
     }
 
-    /* 계좌 드롭다운 채우기 */
-    async function populateAccountSelect(selectedId) {
-      var sel = document.getElementById('holding-acct-select');
-      sel.innerHTML = '<option value="">계좌를 선택하세요</option>';
-      var accounts = cachedAccounts.length ? cachedAccounts : [];
-      if (!accounts.length) {
-        var r = await window.supabase
-          .from('accounts').select('id, broker_name, account_alias')
-          .eq('user_id', currentUser.id).order('created_at', { ascending: true });
-        accounts = r.data || [];
-      }
-      accounts.forEach(function(acct) {
-        var opt = document.createElement('option');
-        opt.value = acct.id;
-        opt.textContent = acct.account_alias
-          ? acct.account_alias + ' (' + acct.broker_name + ')'
-          : acct.broker_name;
-        if (selectedId && acct.id === selectedId) opt.selected = true;
-        sel.appendChild(opt);
+    /* 종목 폼: 증권사 그리드 렌더링 */
+    function renderHoldingBrokerGrid() {
+      var grid = document.getElementById('holding-broker-grid');
+      grid.innerHTML = '';
+      selectedHoldingBroker = '';
+      document.getElementById('holding-custom-broker-wrap').style.display = 'none';
+      document.getElementById('holding-broker-display').style.display = 'none';
+      BROKERS.forEach(function(b) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'broker-chip';
+        btn.textContent = b;
+        btn.addEventListener('click', function() {
+          selectedHoldingBroker = b;
+          grid.querySelectorAll('.broker-chip').forEach(function(c) { c.classList.remove('on'); });
+          btn.classList.add('on');
+          var isCustom = (b === '기타');
+          document.getElementById('holding-custom-broker-wrap').style.display = isCustom ? 'block' : 'none';
+          if (isCustom) document.getElementById('holding-custom-broker').focus();
+          updateHoldingSaveBtn();
+        });
+        grid.appendChild(btn);
       });
-      if (!selectedId && accounts.length === 1) sel.value = accounts[0].id;
+    }
+
+    /* 증권사명으로 계좌 자동 찾기 / 생성 */
+    async function findOrCreateAccount(brokerName) {
+      // 기존 계좌 조회
+      var res = await window.supabase
+        .from('accounts')
+        .select('id')
+        .eq('user_id', currentUser.id)
+        .eq('broker_name', brokerName)
+        .limit(1);
+      if (res.data && res.data.length > 0) return res.data[0].id;
+
+      // 없으면 생성
+      var countRes = await window.supabase
+        .from('accounts')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
+      var nextOrder = (countRes.count || 0) + 1;
+
+      var ins = await window.supabase.from('accounts').insert({
+        user_id:       currentUser.id,
+        broker_name:   brokerName,
+        account_alias: '',
+        cash_balance:  0,
+        is_verified:   false,
+        display_order: nextOrder
+      }).select('id').single();
+      if (ins.error) throw ins.error;
+      return ins.data.id;
     }
 
     /* 시장 선택 */
@@ -2545,17 +2287,20 @@
 
     /* 저장 버튼 활성화 */
     function updateHoldingSaveBtn() {
-      var acct  = document.getElementById('holding-acct-select').value;
-      var name  = document.getElementById('holding-name').value.trim();
+      var name   = document.getElementById('holding-name').value.trim();
       var ticker = document.getElementById('holding-ticker').value.trim();
-      var qty   = parseFloat(document.getElementById('holding-qty').value);
-      var price = parseFloat(document.getElementById('holding-avg-price').value);
-      var ok = acct && name && ticker && qty > 0 && price > 0;
+      var qty    = parseFloat(document.getElementById('holding-qty').value);
+      var price  = parseFloat(document.getElementById('holding-avg-price').value);
+      var brokerOk = holdingFormMode === 'edit'
+        ? true  // 수정 시 증권사 변경 불가
+        : (selectedHoldingBroker && (selectedHoldingBroker !== '기타' ||
+            document.getElementById('holding-custom-broker').value.trim() !== ''));
+      var ok = brokerOk && name && ticker && qty > 0 && price > 0;
       document.getElementById('btn-holding-save').disabled = !ok;
     }
 
     /* 종목 추가 화면 열기 */
-    async function openHoldingAdd() {
+    function openHoldingAdd() {
       if (!currentUser) { showToast('로그인이 필요해요.', true); return; }
       holdingFormMode  = 'add';
       editingHoldingId = null;
@@ -2568,28 +2313,30 @@
       document.getElementById('holding-form-title').textContent = pt.holdingAdd;
       document.getElementById('holding-edit-notice').style.display = 'none';
 
-      var acctSel = document.getElementById('holding-acct-select');
-      acctSel.disabled = false;
+      document.getElementById('holding-broker-grid').style.display = '';
+      document.getElementById('holding-custom-broker-wrap').style.display = 'none';
+      document.getElementById('holding-broker-display').style.display = 'none';
       document.getElementById('holding-ticker').disabled    = false;
       document.getElementById('btn-market-kr').disabled     = false;
       document.getElementById('btn-market-us').disabled     = false;
 
       document.getElementById('holding-name').value      = '';
       document.getElementById('holding-ticker').value    = '';
+      document.getElementById('holding-custom-broker').value = '';
       document.getElementById('holding-qty').value       = '';
       document.getElementById('holding-avg-price').value = '';
 
+      renderHoldingBrokerGrid();
       setMarket('KR');
       setTradeType('long');
       setStatus('holding');
       updateHoldingCalc();
-      await populateAccountSelect();
       updateHoldingSaveBtn();
       showScreen('screen-holding-form');
     }
 
     /* 종목 수정 화면 열기 */
-    async function openHoldingEdit(h) {
+    function openHoldingEdit(h) {
       holdingFormMode  = 'edit';
       editingHoldingId = h.id;
       selectedMarket    = h.market || 'KR';
@@ -2598,17 +2345,27 @@
 
       document.getElementById('holding-form-title').textContent = '종목 수정';
       document.getElementById('holding-edit-notice').style.display = 'block';
-      document.getElementById('holding-acct-select').disabled   = true;
-      document.getElementById('holding-ticker').disabled         = true;
-      document.getElementById('btn-market-kr').disabled          = true;
-      document.getElementById('btn-market-us').disabled          = true;
+      document.getElementById('holding-ticker').disabled = true;
+      document.getElementById('btn-market-kr').disabled  = true;
+      document.getElementById('btn-market-us').disabled  = true;
+
+      // 증권사 그리드 숨기고 현재 증권사 표시
+      document.getElementById('holding-broker-grid').style.display = 'none';
+      document.getElementById('holding-custom-broker-wrap').style.display = 'none';
+      var brokerName = (h.accounts && h.accounts.broker_name) || '';
+      var dispEl = document.getElementById('holding-broker-display');
+      if (brokerName) {
+        dispEl.textContent = brokerName;
+        dispEl.style.display = 'block';
+      } else {
+        dispEl.style.display = 'none';
+      }
 
       document.getElementById('holding-name').value      = h.name || '';
       document.getElementById('holding-ticker').value    = h.ticker || '';
       document.getElementById('holding-qty').value       = h.quantity || '';
       document.getElementById('holding-avg-price').value = h.avg_price || '';
 
-      await populateAccountSelect(h.account_id);
       setMarket(h.market || 'KR');
       setTradeType(h.trade_type || 'long');
       setStatus(h.status || 'holding');
@@ -2619,7 +2376,6 @@
 
     /* 종목 저장 */
     async function saveHolding() {
-      var acctId  = document.getElementById('holding-acct-select').value;
       var name    = document.getElementById('holding-name').value.trim();
       var ticker  = document.getElementById('holding-ticker').value.trim().toUpperCase();
       var qty     = parseFloat(document.getElementById('holding-qty').value);
@@ -2634,6 +2390,15 @@
 
       try {
         if (holdingFormMode === 'add') {
+          // 증권사 확정
+          var brokerName = selectedHoldingBroker === '기타'
+            ? document.getElementById('holding-custom-broker').value.trim()
+            : selectedHoldingBroker;
+          if (!brokerName) { showToast('증권사를 선택해주세요.', true); btn.disabled = false; btn.textContent = '저장'; return; }
+
+          // 계좌 자동 찾기 / 생성
+          var acctId = await findOrCreateAccount(brokerName);
+
           // 같은 계좌 + 같은 티커 중복 체크
           var dupRes = await window.supabase
             .from('holdings')
@@ -2695,8 +2460,10 @@
       var createdDate = h.created_at
         ? new Date(h.created_at).toLocaleDateString('ko-KR') : '-';
 
+      var brokerLabel = (h.accounts && h.accounts.broker_name) ? h.accounts.broker_name : '-';
       body.innerHTML =
         '<div class="detail-section-title">기본 정보</div>' +
+        '<div class="detail-row"><span class="detail-label">증권사</span><span class="detail-val">' + escHtml(brokerLabel) + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">티커</span><span class="detail-val">' + escHtml(h.ticker || '-') + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">시장</span><span class="detail-val">' + mktLabel + '</span></div>' +
         '<div class="detail-row"><span class="detail-label">투자 유형</span><span class="detail-val">' + (tradeLabels[h.trade_type] || '장타') + '</span></div>' +
@@ -2765,7 +2532,7 @@
       // 필수 필드 입력 감지
       document.getElementById('holding-name').addEventListener('input', updateHoldingSaveBtn);
       document.getElementById('holding-ticker').addEventListener('input', updateHoldingSaveBtn);
-      document.getElementById('holding-acct-select').addEventListener('change', updateHoldingSaveBtn);
+      document.getElementById('holding-custom-broker').addEventListener('input', updateHoldingSaveBtn);
 
       // 저장
       document.getElementById('btn-holding-save').addEventListener('click', saveHolding);
